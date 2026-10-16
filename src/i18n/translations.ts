@@ -19,6 +19,8 @@ export interface Translations {
   meta_title: string;
   meta_description: string;
   og_alt: string;
+  /** Job title in the structured data for search engines. */
+  person_job: string;
   lang_label: string;
   nav_main: string;
   nav: { id: string; label: string }[];
@@ -119,6 +121,7 @@ export const translations: Record<Lang, Translations> = {
     meta_title: "Victoria González Malavé · Desarrolladora iOS y Android",
     meta_description: "Desarrolladora iOS y Android en Barcelona. Sus apps TermoTrendy y PassCat ya están publicadas.",
     og_alt: "Victoria González Malavé, desarrolladora iOS y Android",
+    person_job: "Desarrolladora iOS y Android",
     lang_label: "Idioma",
     nav_main: "Principal",
     nav: [
@@ -235,6 +238,7 @@ export const translations: Record<Lang, Translations> = {
     meta_title: "Victoria González Malavé · iOS and Android developer",
     meta_description: "iOS and Android developer in Barcelona. Her apps TermoTrendy and PassCat are already out.",
     og_alt: "Victoria González Malavé, iOS and Android developer",
+    person_job: "iOS and Android developer",
     lang_label: "Language",
     nav_main: "Main",
     nav: [
@@ -351,6 +355,7 @@ export const translations: Record<Lang, Translations> = {
     meta_title: "Victoria González Malavé · Desenvolupadora iOS i Android",
     meta_description: "Desenvolupadora iOS i Android a Barcelona. Les seves apps TermoTrendy i PassCat ja estan publicades.",
     og_alt: "Victoria González Malavé, desenvolupadora iOS i Android",
+    person_job: "Desenvolupadora iOS i Android",
     lang_label: "Idioma",
     nav_main: "Principal",
     nav: [

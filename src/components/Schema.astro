@@ -1,0 +1,87 @@
+---
+/** Structured data for search engines: who she is, where she works and
+ *  studies, her profiles and her published apps. Home pages only. */
+import { langPath, translations, type Lang } from "../i18n/translations";
+import { EMAIL, SITE_NAME } from "../config";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = translations[lang];
+const site = Astro.site!;
+const abs = (path: string) => new URL(path, site).href;
+const person = abs("/#person");
+const store = lang === "en" ? "us" : "es";
+
+const data = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ProfilePage",
+      "@id": abs(langPath(lang)),
+      url: abs(langPath(lang)),
+      name: t.meta_title,
+      description: t.meta_description,
+      inLanguage: lang,
+      mainEntity: { "@id": person },
+    },
+    {
+      "@type": "Person",
+      "@id": person,
+      name: SITE_NAME,
+      givenName: "Victoria",
+      familyName: "González Malavé",
+      jobTitle: t.person_job,
+      description: t.hero_lede,
+      url: abs(langPath(lang)),
+      image: abs("/img/vicky.webp"),
+      email: `mailto:${EMAIL}`,
+      homeLocation: { "@type": "Place", name: "Barcelona" },
+      worksFor: [
+        { "@type": "Organization", name: "NTT DATA" },
+        { "@type": "Organization", name: "two.zero" },
+      ],
+      alumniOf: [
+        { "@type": "CollegeOrUniversity", name: "Epitech" },
+        { "@type": "CollegeOrUniversity", name: "Universitat Politècnica de Catalunya" },
+      ],
+      knowsAbout: ["iOS", "Android", "Swift", "SwiftUI", "Flutter", "FlutterFlow", "Firebase"],
+      sameAs: [
+        "https://www.linkedin.com/in/victoria-gonzalez-malave",
+        "https://github.com/vickyg-cmd",
+        "https://bsky.app/profile/vickythedev.bsky.social",
+      ],
+    },
+    {
+      "@type": "MobileApplication",
+      name: "TermoTrendy",
+      url: `https://apps.apple.com/${store}/app/termotrendy/id6757545419`,
+      image: abs("/img/termotrendy-icon.webp"),
+      description: t.tt_line,
+      operatingSystem: "iOS 17.5+",
+      applicationCategory: "LifestyleApplication",
+      datePublished: "2026-01-14",
+      offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
+      author: { "@id": person },
+    },
+    {
+      "@type": "MobileApplication",
+      name: "PassCat",
+      url: `https://apps.apple.com/${store}/app/passcat/id6753830043`,
+      sameAs: ["https://play.google.com/store/apps/details?id=com.vickyg.pasaportcatala"],
+      image: abs("/img/passcat-icon.webp"),
+      description: t.pc_line,
+      operatingSystem: "iOS, Android",
+      applicationCategory: "EntertainmentApplication",
+      inLanguage: ["ca", "es"],
+      datePublished: "2026-02-27",
+      offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
+      author: { "@id": person },
+    },
+  ],
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(data)} />

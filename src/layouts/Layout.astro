@@ -73,6 +73,7 @@ const xDefault = alternates.includes(ROOT_LANG) ? ROOT_LANG : alternates[0];
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={ogImageAlt ?? t.og_alt} />
     <meta name="twitter:card" content="summary_large_image" />
+    <slot name="head" />
   </head>
   <body>
     <slot />
