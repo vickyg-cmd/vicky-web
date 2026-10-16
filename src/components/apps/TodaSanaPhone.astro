@@ -1,0 +1,49 @@
+---
+import Phone from "./Phone.astro";
+---
+
+<Phone time="9:41" statusColor="rgba(255,255,255,0.6)">
+  <div class="view ts-screen">
+    <div class="ts-center">
+      <svg class="ts-icon" viewBox="0 0 48 48" aria-hidden="true" fill="none">
+        <path d="M24 42s-17-10.5-17-22a11 11 0 0 1 17-9.2A11 11 0 0 1 41 20c0 11.5-17 22-17 22z" fill="#F6D160"/>
+      </svg>
+      <p class="ts-name">TodaSana</p>
+      <p class="ts-soon">Próximamente</p>
+    </div>
+  </div>
+</Phone>
+
+<style>
+  .ts-screen {
+    background: radial-gradient(ellipse at 50% 40%, #2E6B65 0%, #1A3D3A 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 56px 18px 18px;
+  }
+  .ts-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    text-align: center;
+  }
+  .ts-icon {
+    width: 64px;
+    height: 64px;
+    filter: drop-shadow(0 4px 12px rgba(246 209 96 / 0.4));
+  }
+  .ts-name {
+    font: 800 2rem/1 var(--app);
+    color: #ffffff;
+    letter-spacing: -0.02em;
+  }
+  .ts-soon {
+    margin-top: 0.4rem;
+    font: 600 0.75rem var(--app);
+    color: rgba(255 255 255 / 0.5);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+</style>

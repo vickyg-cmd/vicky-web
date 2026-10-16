@@ -49,13 +49,13 @@ const t = translations[lang];
     min-height: calc(100dvh - var(--nav-h));
     display: grid;
     grid-template-rows: 1fr auto;
-    background: var(--green);
+    background: var(--paper);
     color: var(--ink);
     transition: background calc(0.12s / var(--speed));
   }
 
   /* Intro tones: each line gets the next one. */
-  .stage[data-tone="0"] { background: var(--green); }
+  .stage[data-tone="0"] { background: var(--muted); color: var(--paper); }
   .stage[data-tone="1"] { background: var(--sun); }
   .stage[data-tone="2"] { background: var(--red); }
   .stage[data-tone="3"] { background: var(--ink); color: var(--sun); }
@@ -184,6 +184,10 @@ const t = translations[lang];
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
+  }
+  .settled__acts :global(.btn--ghost) {
+    border-color: var(--blue);
+    color: var(--blue);
   }
   .settled__me {
     display: flex;

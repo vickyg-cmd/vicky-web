@@ -6,7 +6,6 @@ import Apps from "./Apps.astro";
 import Ticker from "./Ticker.astro";
 import Now from "./Now.astro";
 import Timeline from "./Timeline.astro";
-import OffScreen from "./OffScreen.astro";
 import Contact from "./Contact.astro";
 import Schema from "./Schema.astro";
 import { type Lang } from "../i18n/translations";
@@ -27,7 +26,6 @@ const { lang } = Astro.props;
     <Ticker lang={lang} />
     <Now lang={lang} />
     <Timeline lang={lang} />
-    <OffScreen lang={lang} />
   </main>
   <Contact lang={lang} />
 </Layout>

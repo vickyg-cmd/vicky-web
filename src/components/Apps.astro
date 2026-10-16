@@ -2,6 +2,7 @@
 import TermoTrendyPhone from "./apps/TermoTrendyPhone.astro";
 import PassCatPhone from "./apps/PassCatPhone.astro";
 import PkUpcPhone from "./apps/PkUpcPhone.astro";
+import TodaSanaPhone from "./apps/TodaSanaPhone.astro";
 import Flip from "./apps/Flip.astro";
 import PkChart from "./apps/PkChart.astro";
 import { translations, type Lang } from "../i18n/translations";
@@ -25,6 +26,7 @@ const picker = [
   { id: "app-termotrendy", name: "TermoTrendy", icon: "/img/termotrendy-icon.webp" },
   { id: "app-passcat", name: "PassCat", icon: "/img/passcat-icon.webp" },
   { id: "app-pkupc", name: "PK UPC" },
+  { id: "app-todasana", name: "TodaSana" },
 ];
 ---
 
@@ -38,7 +40,7 @@ const picker = [
     <div class="picker" role="group" aria-label={t.apps_pick}>
       {picker.map((p, i) => (
         <button type="button" data-target={p.id} aria-pressed={i === 0 ? "true" : "false"}>
-          {p.icon ? <img src={p.icon} alt="" width="128" height="128" /> : <span class="picker__dot" aria-hidden="true">P</span>}
+          {p.icon ? <img src={p.icon} alt="" width="128" height="128" /> : <span class={`picker__dot picker__dot--${p.id}`} aria-hidden="true">{p.name[0]}</span>}
           {p.name}
         </button>
       ))}
@@ -98,12 +100,28 @@ const picker = [
         <p class="app__hint">{t.pk_hint}</p>
       </figcaption>
     </figure>
+
+    <figure class="app" id="app-todasana">
+      <div class="app__phone">
+        <Flip lang={lang} color="#1A3D3A" ink="#FFFFFF">
+          <TodaSanaPhone />
+          <ul slot="back">{t.ts_back.map((x) => <li>{x}</li>)}</ul>
+        </Flip>
+      </div>
+      <figcaption>
+        <p class="app__name"><span>TodaSana</span> <small>{t.ts_status}</small></p>
+        <p>{t.ts_line}</p>
+        <ul class="chips">{t.ts_facts.map((f) => <li>{f}</li>)}</ul>
+        <p class="app__hint">{t.ts_hint}</p>
+      </figcaption>
+    </figure>
   </div>
 </section>
 
 <style>
   .apps {
-    background: var(--sun);
+    background: var(--muted);
+    color: var(--paper);
   }
   .apps__intro {
     display: grid;
@@ -114,6 +132,8 @@ const picker = [
   .apps__intro p {
     max-width: 36ch;
     font-size: 1.2rem;
+    color: var(--sun);
+    font-weight: 700;
   }
   @media (min-width: 900px) {
     .apps__intro {
@@ -127,8 +147,8 @@ const picker = [
   h2 :global(em) {
     display: inline-block;
     padding: 0 0.12em;
-    background: var(--ink);
-    color: var(--sun);
+    background: var(--sun);
+    color: var(--ink);
     font-style: normal;
     rotate: -2deg;
   }
@@ -142,7 +162,7 @@ const picker = [
     margin-bottom: 1.5rem;
     padding: 3px;
     border-radius: 14px;
-    background: rgb(26 26 26 / 0.1);
+    background: rgb(255 255 255 / 0.1);
   }
   .picker button {
     flex: 1 1 auto;
@@ -155,13 +175,14 @@ const picker = [
     border: 0;
     border-radius: 11px;
     background: transparent;
-    color: var(--ink);
+    color: var(--paper);
     font: 700 0.95rem var(--sans);
     white-space: nowrap;
     cursor: pointer;
   }
   .picker button[aria-pressed="true"] {
     background: var(--paper);
+    color: var(--ink);
     box-shadow: 0 1px 4px rgb(26 26 26 / 0.18);
   }
   .picker img,
@@ -178,6 +199,10 @@ const picker = [
     color: #5BE1A0;
     font-size: 0.75rem;
     font-weight: 800;
+  }
+  .picker__dot--app-todasana {
+    background: #1A3D3A;
+    color: #F6D160;
   }
   @media (max-width: 420px) {
     .picker {
@@ -298,7 +323,30 @@ const picker = [
   }
   .app__hint {
     font-size: 0.95rem;
-    color: var(--muted);
+    color: var(--butter);
+  }
+
+  /* Overrides for dark background */
+  .apps :global(.flip__btn) {
+    border-color: var(--paper);
+    color: var(--paper);
+  }
+  .apps :global(.chips li) {
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .apps :global(.btn) {
+    background: var(--sun);
+    color: var(--ink);
+  }
+  .apps :global(.btn--ghost) {
+    background: transparent;
+    border-color: var(--paper);
+    color: var(--paper);
+  }
+  .app__name small {
+    border-color: var(--butter);
+    color: var(--butter);
   }
 </style>
 

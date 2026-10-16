@@ -72,6 +72,12 @@ export interface Translations {
   pk_status: string;
   pk_line: string;
   pk_hint: string;
+
+  ts_status: string;
+  ts_line: string;
+  ts_facts: string[];
+  ts_hint: string;
+  ts_back: string[];
   pk_free_of: string;
   pk_refresh: string;
   pk_note: string;
@@ -91,7 +97,10 @@ export interface Translations {
   tl_kinds: { study: string; work: string; app: string; life: string };
 
   now_title: string;
+  now_before_title: string;
+  now_yo_title: string;
   now: Item[];
+  now_before: Item[];
 
   off_eyebrow: string;
   off_title: string;
@@ -131,23 +140,23 @@ export const translations: Record<Lang, Translations> = {
     ],
     speed_label: "Velocidad de las animaciones",
 
-    intro_lines: ["¡Hola!", "Hi!", "Soy Victoria.", "Hablo rápido.", "Programo igual.", "Hago apps", "para iPhone", "y Android.", "Dos ya están", "publicadas.", "¿Te las enseño?"],
+    intro_lines: ["¡Hola!", "Hi!", "Soy Victoria.", "Hablo rápido.", "Programo igual.", "Desarrollo apps", "para iPhone", "y Android.", "Dos ya están", "publicadas.", "¿Te las enseño?"],
     intro_skip: "Saltar",
     hero_parts: [
       { text: "¡Hola!", tone: "a", br: true },
       { text: "Soy Victoria,", br: true },
       { text: "hablo rápido", tone: "b" },
       { text: "y", br: true },
-      { text: "hago apps.", tone: "c" },
+      { text: "creo apps.", tone: "c" },
     ],
-    hero_title: "¡Hola! Soy Victoria, hablo rápido y hago apps.",
+    hero_title: "¡Hola! Soy Victoria, hablo rápido y creo apps.",
     hero_lede: "Desarrolladora iOS y Android en Barcelona. TermoTrendy y PassCat ya están publicadas.",
     hero_me: "Arquitecta de software junior en NTT DATA. Tech lead en two.zero.",
     hero_cta: "Ver mis apps",
     hero_again: "Otra vez",
 
-    apps_title: "Tócalas. <em>Son</em> mis apps.",
-    apps_body: "Tres apps mías, rehechas para esta página. Venga, pulsa los botones.",
+    apps_title: "Tócalas. Son mis <em>apps.</em>",
+    apps_body: "Cuatro apps mías, rehechas para esta página. Venga, pulsa los botones.",
     apps_pick: "Elige una app",
     example_note: "Pantalla de ejemplo, recreada para esta web",
 
@@ -193,6 +202,16 @@ export const translations: Record<Lang, Translations> = {
     pk_status: "En pausa",
     pk_line: "El párquing del campus UPC de Terrassa se llena todos los días de clase. PK UPC te dice si hay sitio antes de subirte al coche.",
     pk_hint: "Un concepto de la pantalla. Pulsa Actualizar.",
+
+    ts_status: "Próximamente",
+    ts_line: "Voluntariado para ayudar psicológicamente a los afectados por el terremoto de Venezuela.",
+    ts_facts: ["Voluntariado", "iOS y Android", "2026"],
+    ts_hint: "La UI es una sorpresa. Próximamente en el App Store y Google Play.",
+    ts_back: [
+      "Proyecto de voluntariado de emergencia tras el terremoto de Venezuela.",
+      "App de apoyo psicológico para personas afectadas por el desastre.",
+      "Desarrollada con Flutter para llegar a iOS y Android.",
+    ],
     pk_free_of: "libres de 75",
     pk_refresh: "Actualizar",
     pk_note: "Concepto y datos de demo",
@@ -210,20 +229,27 @@ export const translations: Record<Lang, Translations> = {
     tl_kinds: { study: "Estudios", work: "Trabajo", app: "Apps", life: "Fuera de la pantalla" },
 
     now_title: "Ahora",
+    now_before_title: "Antes",
+    now_yo_title: "Yo",
     now: [
       { title: "Arquitecta de software junior, NTT DATA", when: "Desde octubre de 2026" },
-      { title: "Desarrolladora FlutterFlow y tech lead, two.zero", when: "Desde septiembre de 2025" },
-      { title: "Bachelor + Máster, Epitech", when: "Ingeniería de software, hasta 2027" },
+      { title: "Bachelor, Epitech", when: "Ingeniería de software, 2024-2027" },
+    ],
+    now_before: [
+      { title: "FlutterFlow y tech lead, two.zero", when: "Sep 2025 – Sep 2026" },
+      { title: "Asistente docente y hub manager, Epitech", when: "Mar – Jun 2026" },
+      { title: "Prácticas fullstack, Inmatic", when: "Jun – Dic 2025" },
+      { title: "Sistemas informáticos, campus de Terrassa", when: "Dic 2023 – May 2024" },
     ],
 
     off_eyebrow: "Fuera de la pantalla",
     off_title: "La familia, y la montaña.",
-    off_family: "[Aquí Victoria escribe dos líneas sobre su familia]",
+    off_family: "Familia de origen venezolano y gallego. Entre arepas y membrillo, siempre he comido muy rico.",
     off_sports: ["Escalada 6c", "Ferratas K5", "Barranquismo", "Rafting", "Snowboard"],
     photo_alt: "Victoria González Malavé",
 
-    contact_title: "¡Háblame!",
-    contact_body: "Para un trabajo, un proyecto freelance o lo que sea.",
+    contact_title: "¿Hacemos algo?",
+    contact_body: "Una app, un trabajo, un proyecto, una pregunta rápida. Lo que sea.",
     copy_email: "Copiar email",
     copied: "Copiado. ¡Hablamos!",
     selected: "Seleccionado. Cópialo con el teclado.",
@@ -248,23 +274,23 @@ export const translations: Record<Lang, Translations> = {
     ],
     speed_label: "Animation speed",
 
-    intro_lines: ["Hi!", "¡Hola!", "I'm Victoria.", "I talk fast.", "I code the same way.", "I make apps", "for iPhone", "and Android.", "Two are", "already out.", "Want to see them?"],
+    intro_lines: ["Hi!", "¡Hola!", "I'm Victoria.", "I talk fast.", "I code the same way.", "I develop apps", "for iPhone", "and Android.", "Two are", "already out.", "Want to see them?"],
     intro_skip: "Skip",
     hero_parts: [
       { text: "Hi!", tone: "a", br: true },
       { text: "I'm Victoria,", br: true },
       { text: "I talk fast", tone: "b" },
       { text: "and", br: true },
-      { text: "make apps.", tone: "c" },
+      { text: "build apps.", tone: "c" },
     ],
-    hero_title: "Hi! I'm Victoria, I talk fast and make apps.",
+    hero_title: "Hi! I'm Victoria, I talk fast and build apps.",
     hero_lede: "iOS and Android developer in Barcelona. TermoTrendy and PassCat are already out.",
     hero_me: "Junior software architect at NTT DATA. Tech lead at two.zero.",
     hero_cta: "See my apps",
     hero_again: "Say it again",
 
-    apps_title: "Tap them. <em>They're</em> my apps.",
-    apps_body: "Three of my apps, remade for this page. Go on, press the buttons.",
+    apps_title: "Tap them. They're my <em>apps.</em>",
+    apps_body: "Four of my apps, remade for this page. Go on, press the buttons.",
     apps_pick: "Pick an app",
     example_note: "Example screen, recreated for this page",
 
@@ -314,6 +340,16 @@ export const translations: Record<Lang, Translations> = {
     pk_refresh: "Refresh",
     pk_note: "Concept and demo data",
 
+    ts_status: "Coming soon",
+    ts_line: "A volunteer project to provide psychological support to those affected by the Venezuela earthquake.",
+    ts_facts: ["Volunteer", "iOS & Android", "2026"],
+    ts_hint: "The UI is a surprise. Coming soon to the App Store and Google Play.",
+    ts_back: [
+      "Emergency volunteer work after the Venezuela earthquake.",
+      "App for psychological support for those affected by the disaster.",
+      "Built with Flutter for iOS and Android.",
+    ],
+
     stack_label: "Languages and tools",
 
     tl_title: "How I got here",
@@ -327,20 +363,27 @@ export const translations: Record<Lang, Translations> = {
     tl_kinds: { study: "Study", work: "Work", app: "Apps", life: "Off the screen" },
 
     now_title: "Now",
+    now_before_title: "Before",
+    now_yo_title: "Me",
     now: [
       { title: "Junior software architect, NTT DATA", when: "Since October 2026" },
-      { title: "FlutterFlow developer and tech lead, two.zero", when: "Since September 2025" },
-      { title: "Bachelor + Master, Epitech", when: "Software engineering, through 2027" },
+      { title: "Bachelor, Epitech", when: "Software engineering, 2024-2027" },
+    ],
+    now_before: [
+      { title: "FlutterFlow and tech lead, two.zero", when: "Sep 2025 – Sep 2026" },
+      { title: "Teaching assistant and hub manager, Epitech", when: "Mar – Jun 2026" },
+      { title: "Fullstack intern, Inmatic", when: "Jun – Dec 2025" },
+      { title: "IT systems, UPC Terrassa campus", when: "Dec 2023 – May 2024" },
     ],
 
     off_eyebrow: "Off the screen",
     off_title: "Family, and the mountains.",
-    off_family: "[Victoria writes two lines here about her family]",
+    off_family: "Venezuelan and Galician roots. Between arepas and membrillo, I've always eaten very well.",
     off_sports: ["Climbing 6c", "Via ferrata K5", "Canyoning", "Rafting", "Snowboard"],
     photo_alt: "Victoria González Malavé",
 
-    contact_title: "Talk to me!",
-    contact_body: "About a job, a freelance project or anything else.",
+    contact_title: "Shall we make something?",
+    contact_body: "An app, a job, a project, a quick question. Anything goes.",
     copy_email: "Copy email",
     copied: "Copied. Talk soon!",
     selected: "Selected. Copy it with your keyboard.",
@@ -365,23 +408,23 @@ export const translations: Record<Lang, Translations> = {
     ],
     speed_label: "Velocitat de les animacions",
 
-    intro_lines: ["Hola!", "Hi!", "Soc la Victoria.", "Parlo ràpid.", "Programo igual.", "Faig apps", "per a iPhone", "i Android.", "Dues ja estan", "publicades.", "Te les ensenyo?"],
+    intro_lines: ["Hola!", "Hi!", "Soc la Victoria.", "Parlo ràpid.", "Programo igual.", "Desenvolupo apps", "per a iPhone", "i Android.", "Dues ja estan", "publicades.", "Te les ensenyo?"],
     intro_skip: "Omet",
     hero_parts: [
       { text: "Hola!", tone: "a", br: true },
       { text: "Soc la Victoria,", br: true },
       { text: "parlo ràpid", tone: "b" },
       { text: "i", br: true },
-      { text: "faig apps.", tone: "c" },
+      { text: "creo apps.", tone: "c" },
     ],
-    hero_title: "Hola! Soc la Victoria, parlo ràpid i faig apps.",
+    hero_title: "Hola! Soc la Victoria, parlo ràpid i creo apps.",
     hero_lede: "Desenvolupadora iOS i Android a Barcelona. TermoTrendy i PassCat ja estan publicades.",
     hero_me: "Arquitecta de programari júnior a NTT DATA. Tech lead a two.zero.",
     hero_cta: "Mira les meves apps",
     hero_again: "Un altre cop",
 
-    apps_title: "Toca-les. <em>Són</em> les meves apps.",
-    apps_body: "Tres apps meves, refetes per a aquesta pàgina. Va, prem els botons.",
+    apps_title: "Toca-les. Són les meves <em>apps.</em>",
+    apps_body: "Quatre apps meves, refetes per a aquesta pàgina. Va, prem els botons.",
     apps_pick: "Tria una app",
     example_note: "Pantalla d'exemple, recreada per a aquest web",
 
@@ -431,6 +474,16 @@ export const translations: Record<Lang, Translations> = {
     pk_refresh: "Actualitza",
     pk_note: "Concepte i dades de demo",
 
+    ts_status: "Pròximament",
+    ts_line: "Voluntariat per ajudar psicològicament els afectats pel terratrèmol de Veneçuela.",
+    ts_facts: ["Voluntariat", "iOS i Android", "2026"],
+    ts_hint: "La UI és una sorpresa. Pròximament a l'App Store i Google Play.",
+    ts_back: [
+      "Projecte de voluntariat d'emergència després del terratrèmol de Veneçuela.",
+      "App de suport psicològic per a persones afectades pel desastre.",
+      "Desenvolupada amb Flutter per a iOS i Android.",
+    ],
+
     stack_label: "Llenguatges i eines",
 
     tl_title: "Com he arribat fins aquí",
@@ -444,20 +497,27 @@ export const translations: Record<Lang, Translations> = {
     tl_kinds: { study: "Estudis", work: "Feina", app: "Apps", life: "Fora de la pantalla" },
 
     now_title: "Ara",
+    now_before_title: "Abans",
+    now_yo_title: "Jo",
     now: [
       { title: "Arquitecta de programari júnior, NTT DATA", when: "Des d'octubre de 2026" },
-      { title: "Desenvolupadora FlutterFlow i tech lead, two.zero", when: "Des de setembre de 2025" },
-      { title: "Bachelor + Màster, Epitech", when: "Enginyeria de programari, fins al 2027" },
+      { title: "Bachelor, Epitech", when: "Enginyeria de programari, 2024-2027" },
+    ],
+    now_before: [
+      { title: "FlutterFlow i tech lead, two.zero", when: "Set 2025 – Set 2026" },
+      { title: "Assistent docent i hub manager, Epitech", when: "Mar – Jun 2026" },
+      { title: "Pràctiques fullstack, Inmatic", when: "Jun – Des 2025" },
+      { title: "Sistemes informàtics, campus de Terrassa", when: "Des 2023 – Mai 2024" },
     ],
 
     off_eyebrow: "Fora de la pantalla",
     off_title: "La família, i la muntanya.",
-    off_family: "[Aquí la Victoria escriu dues línies sobre la seva família]",
+    off_family: "Família d'origen veneçolà i gallec. Entre arepas i codony, sempre he menjat molt bé.",
     off_sports: ["Escalada 6c", "Vies ferrades K5", "Barranquisme", "Ràfting", "Snowboard"],
     photo_alt: "Victoria González Malavé",
 
-    contact_title: "Parla'm!",
-    contact_body: "Per a una feina, un projecte freelance o el que sigui.",
+    contact_title: "Fem alguna cosa?",
+    contact_body: "Una app, una feina, un projecte, una pregunta ràpida. El que sigui.",
     copy_email: "Copia l'email",
     copied: "Copiat. Parlem!",
     selected: "Seleccionat. Copia'l amb el teclat.",
