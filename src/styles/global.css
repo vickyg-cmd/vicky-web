@@ -1,19 +1,33 @@
 /* Victoria González Malavé
-   Plumbing only: tokens, reset, layout width and the sticky nav. The look
-   comes from the site's own references, not from this file. */
+   A cross of variants 6 and 7 (design/variants/): #6's fast intro and bright
+   colors around #7's working phones. One family, Bricolage Grotesque, pushed
+   on width and weight; rounded type only inside the phones. */
 
 :root {
-  --brand: #111014;
-  --paper: #ffffff;
-  --ink: #1a1a1a;
-  --muted: #555555;
+  /* Victoria's palette (2026-10-16). Red and blue are under 4.5:1 against
+     both ink and paper, so they only carry big type or color blocks, never
+     body text. Olive is in her palette but not on the page yet. */
+  --paper: #FFF7D6;
+  --ink: #1A1A1A;
+  --muted: #3B2C22; /* brown: secondary text */
+  --sun: #F6D160;   /* apps stage, contact accents */
+  --butter: #F7E79A; /* off the screen */
+  --green: #6F9B5A; /* hero */
+  --red: #D6433A;
+  --blue: #4A78DB;
+  --olive: #7C805D;
 
-  --serif: Georgia, serif;
-  --sans: system-ui, sans-serif;
+  --sans: "Bricolage Grotesque Variable", system-ui, sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  /* Inside the phones, so they read as iOS. Nunito only loads off Apple devices. */
+  --app: ui-rounded, "SF Pro Rounded", "Nunito Variable", system-ui, sans-serif;
 
-  --radius: 6px;
-  --gutter: clamp(1.25rem, 5vw, 4.5rem);
+  --radius: 14px;
+  --gutter: clamp(16px, 4vw, 56px);
+  --nav-h: 64px;
+
+  /* Set by the speed button: 1, 1.5 or 2. Every animation divides by it. */
+  --speed: 1;
 }
 
 *,
@@ -24,29 +38,36 @@
 
 html {
   scroll-behavior: smooth;
-  /* Keeps section headings clear of the sticky nav after an anchor jump.
-     Match it to the nav's real height at each breakpoint. */
-  scroll-padding-top: 7rem;
+  /* Keeps section headings clear of the sticky nav after an anchor jump. */
+  scroll-padding-top: calc(var(--nav-h) + 8px);
   -webkit-text-size-adjust: 100%;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }
 
 body {
   margin: 0;
-  font-family: var(--sans);
-  font-size: 1.0625rem;
-  line-height: 1.55;
+  font: 400 1.125rem/1.5 var(--sans);
   color: var(--ink);
   background: var(--paper);
   -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
 }
 
 img {
   display: block;
   max-width: 100%;
+  height: auto;
 }
 
 a {
   color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
 }
 
 h1,
@@ -60,15 +81,72 @@ figure {
 
 .wrap {
   width: 100%;
-  max-width: 80rem;
+  max-width: 84rem;
   margin-inline: auto;
   padding-inline: var(--gutter);
 }
 
 .section {
-  display: grid;
-  gap: 1rem;
-  padding-block: 4rem;
+  padding-block: clamp(3.5rem, 9vw, 7rem);
+}
+
+.eyebrow {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+h2 {
+  font-weight: 800;
+  font-size: clamp(2.4rem, 7vw, 5rem);
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.25rem;
+  text-wrap: balance;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 54px;
+  padding: 0 1.3rem;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--ink);
+  color: var(--paper);
+  font: 700 1.05rem var(--sans);
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn--ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 2px solid var(--ink);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0;
+  list-style: none;
+}
+.chips li {
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* Text Victoria still has to write. Dashed so it can't ship by accident. */
+.placeholder {
+  border: 2px dashed currentColor;
+  border-radius: var(--radius);
+  padding: 0.8rem 1rem;
+  max-width: 46ch;
 }
 
 /* ---- Nav ---- */
@@ -76,35 +154,28 @@ figure {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: var(--brand);
-  color: var(--paper);
+  background: var(--paper);
+  border-bottom: 2px solid var(--ink);
 }
-
-/* Narrow: brand and languages share the top row, links sit beneath.
-   Wide: all three on one line. */
 .nav {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-template-areas:
-    "brand langs"
-    "links links";
+  display: flex;
   align-items: center;
-  row-gap: 0.4rem;
-  padding-block: 0.9rem 0.6rem;
+  gap: 0.75rem;
+  min-height: var(--nav-h);
 }
 .nav__brand {
-  grid-area: brand;
-  width: fit-content;
-  font-family: var(--serif);
-  font-size: 1.5rem;
+  margin-right: auto;
+  font-weight: 800;
   text-decoration: none;
+  white-space: nowrap;
+}
+.nav__brand-long {
+  display: none;
 }
 .nav__links {
-  grid-area: links;
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: 0.9rem;
-  font-weight: 600;
+  display: none;
+  gap: 1.5rem;
+  font-weight: 700;
 }
 /* 44px tap targets. */
 .nav__links a {
@@ -113,45 +184,57 @@ figure {
   min-height: 44px;
   text-decoration: none;
 }
+.nav__links a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
 .nav__langs {
-  grid-area: langs;
   display: flex;
   gap: 0.25rem;
   padding: 0;
   list-style: none;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   font-weight: 700;
 }
 .nav__langs a,
 .nav__langs span {
   display: inline-flex;
   align-items: center;
-  min-height: 36px;
-  padding: 0 0.5rem;
+  justify-content: center;
+  min-width: 42px;
+  min-height: 44px;
   border: 2px solid transparent;
-  border-radius: 4px;
+  border-radius: 999px;
   text-decoration: none;
 }
 .nav__langs span {
   border-color: currentColor;
 }
 
-@media (min-width: 760px) {
-  html {
-    scroll-padding-top: 6rem;
-  }
-  .nav {
-    grid-template-columns: 1fr auto auto;
-    grid-template-areas: "brand links langs";
-    column-gap: 2rem;
-    padding-block: 1.2rem;
-  }
-  .nav__links {
-    column-gap: 2rem;
-  }
+/* The voice-note speed button: tap to cycle 1×, 1.5×, 2×. */
+.speed {
+  min-width: 60px;
+  min-height: 40px;
+  padding: 0 0.7rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font: 700 0.95rem var(--sans);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
 }
 
-/* Blog: just enough to read. Restyle with the rest of the site. */
+@media (min-width: 560px) {
+  .nav__brand-long { display: inline; }
+  .nav__brand-short { display: none; }
+}
+@media (min-width: 900px) {
+  .nav { gap: 2rem; }
+  .nav__links { display: flex; }
+}
+
+/* Blog: just enough to read. Restyle with the rest of the site once there are posts. */
 .post, .post-list { max-width: 42rem; }
 .post__meta, .post-list time { color: var(--muted); font-size: 0.9rem; }
 .prose > * + * { margin-top: 1em; }

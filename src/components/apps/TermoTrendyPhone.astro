@@ -1,0 +1,216 @@
+---
+import Phone from "./Phone.astro";
+import { translations, type Lang } from "../../i18n/translations";
+
+interface Props {
+  lang: Lang;
+}
+
+const t = translations[Astro.props.lang];
+// The in-app copy stays in Spanish in both languages: it's what the real app says.
+---
+
+<Phone time="14:57" id="tt">
+  <div class="view tt" data-v="home" data-pos="center">
+    <p class="tt-logo"><b>termo</b><span>trendy</span></p>
+    <p class="tt-tag">✨ tu estilo, tu vibe ✨</p>
+    <button type="button" class="tt-btn tt-btn--pink" data-go="weather"><span><b>Crear Outfit</b><small>arma tu look perfecto</small></span><i aria-hidden="true">→</i></button>
+    <button type="button" class="tt-btn tt-btn--green" data-go="closet"><span><b>Añadir Ropa</b><small>sube tus prendas favoritas</small></span><i aria-hidden="true">→</i></button>
+    <div class="dock" aria-hidden="true"><i style="background:#E8385A"></i><i style="background:#C9C75A"></i><i style="background:#5A9AAE"></i></div>
+  </div>
+
+  <div class="view tt" data-v="weather" data-pos="right">
+    <button type="button" class="back" data-back>‹ Back</button>
+    <h3>¿Qué tiempo hace?</h3>
+    <div class="field">🔍 barcelona</div>
+    <div class="loc">➤ Usar mi ubicación</div>
+    <div class="wx"><div class="wx__c">Barcelona</div><div class="wx__d">10 January 2026</div><div class="wx__t">12°</div><div class="wx__s">Clear</div></div>
+    <button type="button" class="gen" data-go="outfit">Generar Outfit</button>
+  </div>
+
+  <div class="view tt" data-v="outfit" data-pos="right">
+    <button type="button" class="back" data-back>‹ Back</button>
+    <h3>Tu outfit</h3>
+    <ul class="fit">
+      <li><i style="background:#E3D35E"></i><span>Jersey de punto<small>12°, despejado</small></span></li>
+      <li><i style="background:#3B5BA5"></i><span>Vaqueros<small>de tu armario</small></span></li>
+      <li><i style="background:#0B6A4C"></i><span>Chaqueta ligera<small>por si refresca</small></span></li>
+      <li><i style="background:#F2F2F2;border:1px solid #ddd"></i><span>Zapatillas blancas<small>de tu armario</small></span></li>
+    </ul>
+    <p class="note">{t.example_note}</p>
+  </div>
+
+  <div class="view tt" data-v="closet" data-pos="right">
+    <button type="button" class="back" data-back>‹ Back</button>
+    <h3>Tu armario</h3>
+    <div class="closet"><div>Vaqueros</div><div>Jersey</div><div>Chaqueta</div><div class="closet__add" aria-hidden="true">+</div></div>
+    <p class="note">{t.example_note}</p>
+  </div>
+</Phone>
+
+<style>
+  /* TermoTrendy's own colors, taken from the app. Not the site palette. */
+  .tt {
+    --tt-sky: #7BB1C7;
+    --tt-pink: #E8385A;
+    --tt-green: #0B6A4C;
+    background: var(--tt-sky);
+    color: var(--ink);
+  }
+  .tt-logo {
+    margin: 70px 0 8px;
+    text-align: center;
+    font: 900 40px/1 var(--app);
+    letter-spacing: -0.02em;
+  }
+  .tt-logo b { color: var(--tt-pink); }
+  .tt-logo span { color: var(--tt-green); }
+  .tt-tag {
+    margin: 0 0 40px;
+    text-align: center;
+    font: 700 14px var(--app);
+    letter-spacing: 0.04em;
+    color: #213;
+  }
+  .tt-btn {
+    display: grid;
+    grid-template-columns: 1fr 34px;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 14px;
+    padding: 18px 16px 18px 20px;
+    border: 0;
+    border-radius: 24px;
+    color: #fff;
+    text-align: left;
+    font-family: var(--app);
+    cursor: pointer;
+    box-shadow: 0 8px 18px -8px rgb(0 0 0 / 0.35);
+    transition: transform 0.12s;
+  }
+  .tt-btn:active,
+  .gen:active { transform: scale(0.97); }
+  .tt-btn b { display: block; font: 900 21px/1.1 var(--app); }
+  .tt-btn small { font: 600 12.5px var(--app); }
+  .tt-btn i {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #fff;
+    font-style: normal;
+    font-weight: 900;
+  }
+  .tt-btn--pink { background: var(--tt-pink); }
+  .tt-btn--pink i { color: var(--tt-pink); }
+  .tt-btn--green { background: var(--tt-green); }
+  .tt-btn--green i { color: var(--tt-green); }
+  .dock {
+    display: flex;
+    gap: 28px;
+    align-self: center;
+    margin-top: auto;
+    padding: 16px 30px;
+    border-radius: 26px;
+    background: var(--tt-green);
+  }
+  .dock i { width: 18px; height: 18px; border-radius: 50%; }
+  .back {
+    align-self: flex-start;
+    min-height: 44px;
+    padding: 8px 0;
+    border: 0;
+    background: none;
+    color: #0A63E0;
+    font: 600 16px var(--app);
+    cursor: pointer;
+  }
+  h3 { margin: 4px 0 14px; text-align: center; font: 900 25px/1.1 var(--app); }
+  .field {
+    margin-bottom: 10px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    background: #fff;
+    color: #333;
+    font: 600 15px var(--app);
+  }
+  .loc {
+    margin-bottom: 12px;
+    padding: 12px;
+    border-radius: 16px;
+    background: var(--tt-green);
+    color: #fff;
+    text-align: center;
+    font: 800 15px var(--app);
+  }
+  .wx { padding: 16px; border-radius: 24px; background: #fff; text-align: center; }
+  .wx__c { font: 900 20px var(--app); }
+  .wx__d { margin: 2px 0 4px; color: #666; font: 600 12px var(--app); }
+  .wx__t { color: var(--tt-pink); font: 900 64px/1 var(--app); }
+  .wx__s { color: #444; font: 700 15px var(--app); }
+  .gen {
+    margin-top: auto;
+    padding: 16px;
+    border: 0;
+    border-radius: 22px;
+    background: var(--tt-pink);
+    color: #fff;
+    font: 900 19px var(--app);
+    cursor: pointer;
+    box-shadow: 0 8px 18px -8px rgb(0 0 0 / 0.4);
+  }
+  .fit { display: grid; gap: 9px; margin: 0 0 10px; padding: 0; list-style: none; }
+  .fit li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 18px;
+    background: #fff;
+    font: 800 15px var(--app);
+  }
+  .fit li i { flex: none; width: 34px; height: 34px; border-radius: 10px; }
+  .fit li small { display: block; color: #666; font: 600 12px var(--app); }
+  .closet { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .closet div {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    padding: 6px;
+    border-radius: 18px;
+    background: #fff;
+    text-align: center;
+    font: 800 13px var(--app);
+  }
+  .closet .closet__add { background: var(--tt-green); color: #fff; font-size: 30px; }
+</style>
+
+<script>
+  // A tiny iOS-style navigation stack: push with data-go, pop with data-back.
+  const tt = document.getElementById("tt")!;
+  const stack = ["home"];
+
+  function sync() {
+    const top = stack.length - 1;
+    tt.querySelectorAll<HTMLElement>(".view").forEach((el) => {
+      const i = stack.indexOf(el.dataset.v!);
+      el.dataset.pos = i === top ? "center" : i >= 0 ? "left" : "right";
+      el.inert = i !== top;
+    });
+  }
+
+  tt.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement;
+    const go = target.closest<HTMLElement>("[data-go]");
+    const back = target.closest("[data-back]");
+    if (go) stack.push(go.dataset.go!);
+    else if (back && stack.length > 1) stack.pop();
+    else return;
+    sync();
+    // Keep keyboard focus inside the phone: first button on the new screen.
+    tt.querySelector<HTMLElement>('.view[data-pos="center"] button')?.focus({ preventScroll: true });
+  });
+
+  sync();
+</script>

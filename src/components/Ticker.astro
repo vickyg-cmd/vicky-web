@@ -1,0 +1,60 @@
+---
+import { translations, type Lang } from "../i18n/translations";
+
+interface Props {
+  lang: Lang;
+}
+
+const t = translations[Astro.props.lang];
+const stack = ["Swift", "SwiftUI", "FlutterFlow", "C", "C++", "Python", "Godot 4", "Xcode", "VHDL"];
+---
+
+<!-- The list twice over, so the loop has no seam. Screen readers get it once. -->
+<div class="ticker">
+  <p class="visually-hidden">{t.stack_label}: {stack.join(", ")}</p>
+  <div class="ticker__track" aria-hidden="true">
+    {[...stack, ...stack].map((s) => <span>{s}</span>)}
+  </div>
+</div>
+
+<style>
+  .ticker {
+    overflow: hidden;
+    padding: 1.1rem 0;
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .ticker__track {
+    display: flex;
+    gap: 2.5rem;
+    width: max-content;
+    font-weight: 800;
+    font-size: clamp(1.6rem, 4vw, 2.6rem);
+    letter-spacing: -0.02em;
+    animation: run calc(28s / var(--speed)) linear infinite;
+  }
+  .ticker__track span:nth-child(3n + 1) { color: var(--sun); }
+  .ticker__track span:nth-child(3n + 2) { color: var(--butter); }
+  .ticker__track span:nth-child(3n) { color: var(--green); }
+  .ticker:hover .ticker__track { animation-play-state: paused; }
+  @keyframes run {
+    to { transform: translateX(calc(-50% - 1.25rem)); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ticker__track {
+      animation: none;
+      flex-wrap: wrap;
+      width: auto;
+      padding-inline: var(--gutter);
+    }
+    .ticker__track span:nth-child(n + 10) { display: none; }
+  }
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>

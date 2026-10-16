@@ -1,6 +1,5 @@
 ---
 import { langs, langPath, translations, type Lang } from "../i18n/translations";
-import { SITE_NAME } from "../config";
 
 interface Props {
   lang: Lang;
@@ -15,15 +14,20 @@ const t = translations[lang];
 // Section links are anchors on the home page; from any other page they go home first.
 const home = subpath ? langPath(lang) : "";
 const switchTo = (l: Lang) => langPath(l, alternates.includes(l) ? subpath : "");
+// Shown as on a voice note: one button that cycles 1×, 1.5×, 2×.
+const comma = lang !== "en";
 ---
 
 <!-- Own bar so it can stay stuck to the top for the whole page. -->
 <div class="nav-bar">
   <header class="wrap nav">
-    <a class="nav__brand" href={subpath ? langPath(lang) : "#top"}>{SITE_NAME}</a>
+    <a class="nav__brand" href={subpath ? langPath(lang) : "#top"}>
+      <span class="nav__brand-long">Victoria González Malavé</span><span class="nav__brand-short">Victoria</span>
+    </a>
     <nav class="nav__links" aria-label={t.nav_main}>
       {t.nav.map((n) => <a href={`${home}#${n.id}`}>{n.label}</a>)}
     </nav>
+    <button type="button" class="speed" data-speed-button data-comma={comma ? "1" : ""} title={t.speed_label} aria-label={`${t.speed_label}: 1×`} data-label={t.speed_label}>1×</button>
     <ul class="nav__langs" aria-label={t.lang_label}>
       {langs.map((l) => (
         <li>
@@ -37,3 +41,34 @@ const switchTo = (l: Lang) => langPath(l, alternates.includes(l) ? subpath : "")
     </ul>
   </header>
 </div>
+
+<script>
+  // The speed button sets --speed on <html>. Every animation on the page
+  // divides its duration by it; scripts read it through speed() in lib/speed.ts.
+  // It's remembered per browser so all three languages keep the same pace.
+  const root = document.documentElement;
+  const button = document.querySelector<HTMLButtonElement>("[data-speed-button]")!;
+  const STEPS = ["1", "1.5", "2"];
+
+  function apply(value: string) {
+    root.style.setProperty("--speed", value);
+    const text = `${button.dataset.comma ? value.replace(".", ",") : value}×`;
+    button.textContent = text;
+    button.setAttribute("aria-label", `${button.dataset.label}: ${text}`);
+  }
+
+  let saved: string | null = null;
+  try {
+    saved = localStorage.getItem("speed");
+  } catch {}
+  if (saved && STEPS.includes(saved)) apply(saved);
+
+  button.addEventListener("click", () => {
+    const now = root.style.getPropertyValue("--speed") || "1";
+    const next = STEPS[(STEPS.indexOf(now) + 1) % STEPS.length];
+    apply(next);
+    try {
+      localStorage.setItem("speed", next);
+    } catch {}
+  });
+</script>

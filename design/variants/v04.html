@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Victoria González Malavé · Castell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* Look: a castell, built from the base up as you scroll. She was a crossa with Castellers de Sarrià.
+     Color: the lilac of her blazer in her own photo, flat and duotone, ink in deep aubergine. */
+  :root {
+    --brand: #B6A6DE;    /* lilac */
+    --paper: #F3F1F7;
+    --ink: #241B33;
+    --muted: #5E5670;
+    --faixa: #D7263D;
+    --serif: "Big Shoulders Display", Impact, sans-serif;
+    --sans: "Work Sans", system-ui, sans-serif;
+    --mono: ui-monospace, monospace;
+    --radius: 4px;
+    --gutter: clamp(16px, 4vw, 56px);
+    --nav-h: 56px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: calc(var(--nav-h) + 8px); }
+  @media (max-width: 820px) { html { scroll-padding-top: calc(var(--nav-h) + 80px); } }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.55 var(--sans); overflow-x: clip; }
+  a { color: inherit; text-underline-offset: 3px; }
+  :focus-visible { outline: 3px solid var(--faixa); outline-offset: 3px; }
+
+  nav { position: sticky; top: 0; z-index: 6; height: var(--nav-h); display: flex; align-items: center; justify-content: space-between; padding: 0 var(--gutter); background: var(--ink); color: var(--paper); }
+  nav a { font: 900 1.4rem var(--serif); text-decoration: none; letter-spacing: .01em; }
+  nav button { font: 600 .9rem var(--sans); min-height: 44px; min-width: 52px; background: transparent; color: var(--paper); border: 1.5px solid var(--brand); border-radius: var(--radius); cursor: pointer; }
+
+  .hero { display: grid; grid-template-columns: 1fr 1fr; min-height: calc(100dvh - var(--nav-h)); background: var(--brand); }
+  @media (max-width: 820px) { .hero { grid-template-columns: 1fr; min-height: 0; } }
+  .hero .ph { position: relative; background: var(--brand); overflow: hidden; min-height: 60dvh; }
+  .hero .ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; filter: grayscale(1) contrast(1.15) brightness(1.05); mix-blend-mode: multiply; }
+  .hero .tx { padding: clamp(2rem, 6vw, 4.5rem) var(--gutter); display: flex; flex-direction: column; justify-content: flex-end; }
+  .hero h1 { font: 900 clamp(4.2rem, 13vw, 10rem)/.82 var(--serif); margin: 0 0 1.5rem; text-transform: uppercase; }
+  .hero h1 span { display: block; }
+  .hero p { font-size: clamp(1.05rem, 1.6vw, 1.2rem); max-width: 34ch; margin: 0 0 1rem; }
+  .hero .how { font-size: 1rem; border-top: 2px solid var(--ink); padding-top: 1rem; margin-top: .5rem; }
+
+  .build { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 34%); gap: var(--gutter); padding: 0 var(--gutter); }
+  .tiers { padding-bottom: 4rem; }
+  .tier { min-height: 70dvh; padding: clamp(3rem, 8vw, 6rem) 0 2rem; border-bottom: 2px solid var(--ink); }
+  .tier .lvl { font: 600 .95rem var(--sans); color: var(--muted); margin: 0 0 .25rem; }
+  .tier h2 { font: 900 clamp(3rem, 8vw, 5.5rem)/.9 var(--serif); margin: 0 0 .5rem; text-transform: uppercase; }
+  .tier .gloss { font-style: italic; color: var(--muted); margin: 0 0 1.75rem; max-width: 46ch; }
+  .tier ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; }
+  .tier li { display: grid; grid-template-columns: 5.5rem 1fr; gap: .2rem 1rem; }
+  .tier li .y { font: 700 1.25rem var(--serif); }
+  .tier li h3 { margin: 0; font-size: 1.1rem; font-weight: 600; }
+  .tier li p { grid-column: 2; margin: 0; color: var(--muted); }
+  .tier li a { grid-column: 2; font-weight: 600; justify-self: start; padding: .3rem 0; }
+  .tier.top h2 { color: var(--ink); }
+  .feature { margin-top: 1.75rem; display: grid; grid-template-columns: 120px 1fr; gap: 1.25rem; align-items: start; background: var(--ink); color: var(--paper); padding: 1.25rem; border-radius: var(--radius); }
+  .feature img { width: 100%; border-radius: 14px; }
+  .feature h3 { font: 900 2rem/1 var(--serif); margin: 0 0 .5rem; text-transform: uppercase; }
+  .feature p { margin: 0 0 .9rem; }
+  .btn { display: inline-flex; align-items: center; min-height: 48px; padding: 0 1.1rem; background: var(--brand); color: var(--ink); font-weight: 600; text-decoration: none; border-radius: var(--radius); }
+  @media (max-width: 520px) { .feature { grid-template-columns: 1fr; } .feature img { width: 96px; } }
+
+  /* The tower, sticky beside the text. Tiers fill in as their section scrolls into view. */
+  .tower { position: sticky; top: calc(var(--nav-h) + 2rem); align-self: start; height: calc(100dvh - var(--nav-h) - 4rem); display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 1rem; }
+  .tower svg { width: 100%; max-height: 100%; }
+  .tower .p { fill: none; stroke: var(--brand); stroke-width: 2; transition: fill .4s, stroke .4s; }
+  .tower .on .p { fill: var(--ink); stroke: var(--ink); }
+  .tower .faixa { fill: var(--faixa); opacity: 0; transition: opacity .4s; }
+  .tower .on .faixa { opacity: 1; }
+  .tower .arm { stroke: var(--ink); stroke-width: 5; stroke-linecap: round; opacity: 0; transition: opacity .4s; }
+  .tower .loaded .arm { opacity: 1; }
+  .tower figcaption { font: 600 .85rem var(--sans); color: var(--muted); text-align: center; margin-top: .5rem; }
+  @media (max-width: 820px) {
+    .build { grid-template-columns: 1fr; }
+    .tower { order: -1; top: var(--nav-h); z-index: 5; height: 72px; margin: 0 calc(-1 * var(--gutter)); padding: 6px var(--gutter); flex-direction: row; align-items: center; justify-content: flex-start; gap: .75rem; background: var(--paper); border-bottom: 2px solid var(--ink); }
+    .tower svg { width: auto; height: 60px; }
+    .tower figcaption { margin: 0; font: 900 1.4rem var(--serif); color: var(--ink); text-transform: uppercase; }
+  }
+
+  .aleta { padding: clamp(3rem, 8vw, 6rem) var(--gutter); background: var(--ink); color: var(--paper); }
+  .aleta h2 { font: 900 clamp(3rem, 9vw, 6rem)/.9 var(--serif); margin: 0 0 1rem; text-transform: uppercase; color: var(--brand); }
+  .aleta p { max-width: 46ch; }
+  .aleta .mail { font: 700 clamp(1.4rem, 5vw, 2.6rem) var(--serif); word-break: break-all; color: var(--paper); }
+  .aleta ul { list-style: none; padding: 0; margin: 1.5rem 0 0; display: flex; flex-wrap: wrap; gap: .25rem 1.5rem; font-weight: 600; }
+  .aleta ul a { display: inline-block; padding: .6rem 0; }
+  @media (prefers-reduced-motion: reduce) { .tower * { transition: none !important; } }
+</style>
+</head>
+<body>
+<nav>
+  <a href="#">VGM</a>
+  <button type="button" data-lang-toggle aria-label="Read in English">EN</button>
+</nav>
+
+<header class="hero">
+  <div class="ph"><img src="img/vicky.jpg" alt="Victoria González Malavé, al aire libre, con montañas detrás" width="720" height="797"></div>
+  <div class="tx">
+    <h1><span>Victoria</span><span>González</span><span>Malavé</span></h1>
+    <p data-en="iOS developer in Barcelona. Junior software architect at NTT DATA, and the person behind TermoTrendy.">Desarrolladora iOS en Barcelona. Arquitecta de software junior en NTT DATA, y la persona detrás de TermoTrendy.</p>
+    <p class="how" data-en="I was a crossa with Castellers de Sarrià (2021 to 2022). So this page goes the way a castell does: from the base up. Scroll and it builds.">Fui crossa en los Castellers de Sarrià (2021–2022). Así que esta página va como un castell: de la base hacia arriba. Baja y se levanta.</p>
+  </div>
+</header>
+
+<div class="build">
+  <div class="tiers">
+    <section class="tier" data-level="1" id="pinya">
+      <p class="lvl" data-en="Level 1">Piso 1</p>
+      <h2>Pinya</h2>
+      <p class="gloss" data-en="The crowd at the base that holds everyone else up.">La multitud de la base que sostiene a todos los demás.</p>
+      <ul>
+        <li><span class="y">2022</span><h3 data-en="UPC">UPC</h3><p data-en="Two years of study, 2022 to 2024.">Dos años de estudios, de 2022 a 2024.</p></li>
+        <li><span class="y">2022</span><h3 data-en="Private tutoring">Clases particulares</h3><p data-en="Sciences and academic support, from primary school to university, through 2025.">Ciencias y refuerzo, de primaria a la universidad, hasta 2025.</p></li>
+        <li><span class="y">2023</span><h3 data-en="IT services intern, UPC Terrassa campus">Prácticas en servicios informáticos, campus UPC de Terrassa</h3><p data-en="The base image for campus computers, and the inventory.">La imagen base de los ordenadores del campus, y el inventario.</p></li>
+      </ul>
+    </section>
+
+    <section class="tier" data-level="2" id="tronc">
+      <p class="lvl" data-en="Level 2">Piso 2</p>
+      <h2>Tronc</h2>
+      <p class="gloss" data-en="The trunk: the tiers that climb one on top of another.">El tronco: los pisos que suben uno encima de otro.</p>
+      <ul>
+        <li><span class="y">2024</span><h3 data-en="Bachelor + Master in Software Engineering, Epitech">Bachelor + Máster en Ingeniería de Software, Epitech</h3><p data-en="Through 2027. Lots of C.">Hasta 2027. Mucho C.</p></li>
+        <li><span class="y">2024</span><h3>my_printf · my_hunter</h3><p data-en="printf from scratch, in a team. And a game about a very annoying Mario Wonder character.">printf desde cero, en equipo. Y un juego contra un personaje muy pesado de Mario Wonder.</p><a href="https://github.com/vickyg-cmd" data-en="See them on GitHub">Verlos en GitHub</a></li>
+        <li><span class="y">2024</span><h3 data-en="A month of SwiftUI in New York">Un mes de SwiftUI en Nueva York</h3><p data-en="CodeWithChris online course, August to September.">Curso online de CodeWithChris, de agosto a septiembre.</p></li>
+      </ul>
+    </section>
+
+    <section class="tier" data-level="3" id="tercos">
+      <p class="lvl" data-en="Level 3">Piso 3</p>
+      <h2>Terços</h2>
+      <p class="gloss" data-en="The third tier, where it starts to feel high.">El tercer piso, donde ya se nota la altura.</p>
+      <ul>
+        <li><span class="y">2025</span><h3 data-en="Fullstack intern, Inmatic">Prácticas fullstack, Inmatic</h3><p data-en="June to December 2025.">De junio a diciembre de 2025.</p></li>
+        <li><span class="y">2025</span><h3 data-en="FlutterFlow developer and tech lead, two.zero">Desarrolladora FlutterFlow y tech lead, two.zero</h3><p data-en="Since September 2025, Sant Cugat del Vallès.">Desde septiembre de 2025, en Sant Cugat del Vallès.</p></li>
+        <li><span class="y">2026</span><h3 data-en="Teaching assistant and hub manager, Epitech">Asistente docente y hub manager, Epitech</h3><p data-en="March to June 2026.">De marzo a junio de 2026.</p></li>
+      </ul>
+    </section>
+
+    <section class="tier" data-level="4" id="dosos">
+      <p class="lvl" data-en="Level 4">Piso 4</p>
+      <h2>Dosos</h2>
+      <p class="gloss" data-en="The two who go near the top. Here, my two apps.">Los dos que van casi arriba. Aquí, mis dos apps.</p>
+      <ul>
+        <li><span class="y">2024</span><h3>PK UPC</h3><p data-en="Shows if there are free spaces in the 75-space lot at the UPC Terrassa campus. SwiftUI, on hold.">Muestra si quedan plazas en el párquing de 75 plazas del campus UPC de Terrassa. SwiftUI, en pausa.</p></li>
+      </ul>
+      <div class="feature">
+        <img src="img/tt-icon-256.jpg" alt="Icono de TermoTrendy" width="120" height="120">
+        <div>
+          <h3>TermoTrendy</h3>
+          <p data-en="Picks the day's outfit from your own closet, based on where you are and the forecast. On the App Store since January 2026, free. SwiftUI, made solo.">Elige el outfit del día con la ropa de tu armario, según dónde estás y la previsión. En el App Store desde enero de 2026, gratis. SwiftUI, hecha en solitario.</p>
+          <a class="btn" href="https://apps.apple.com/es/app/termotrendy/id6757545419" data-en="Download it free">Descargarla gratis</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="tier top" data-level="5" id="enxaneta">
+      <p class="lvl" data-en="Level 5">Piso 5</p>
+      <h2>Enxaneta</h2>
+      <p class="gloss" data-en="The one who climbs to the top and crowns it.">Quien sube hasta arriba y lo corona.</p>
+      <ul>
+        <li><span class="y">2026</span><h3 data-en="Junior software architect, NTT DATA">Arquitecta de software junior, NTT DATA</h3><p data-en="Since October 2026, Barcelona.">Desde octubre de 2026, en Barcelona.</p></li>
+      </ul>
+    </section>
+  </div>
+
+  <figure class="tower" aria-hidden="true">
+    <svg viewBox="0 0 220 320" id="castell"></svg>
+    <figcaption id="tcap" data-en="Base">Pinya</figcaption>
+  </figure>
+</div>
+
+<section class="aleta" id="contacto" data-level="6">
+  <h2 data-en="Aleta">Aleta</h2>
+  <p data-en="When the enxaneta raises a hand at the top, the castell is loaded. If you want to talk about a job or an app, this is my hand up.">Cuando la enxaneta levanta la mano arriba, el castell está cargado. Si quieres hablar de un puesto o de una app, esta es mi mano levantada.</p>
+  <a class="mail" href="mailto:vickygonzalezmalave@gmail.com">vickygonzalezmalave@gmail.com</a>
+  <ul>
+    <li><a href="https://github.com/vickyg-cmd">GitHub</a></li>
+    <li><a href="https://linkedin.com/in/victoria-gonzalez-malave">LinkedIn</a></li>
+    <li><a href="https://bsky.app/profile/vickythedev.bsky.social">Bluesky</a></li>
+  </ul>
+</section>
+
+<script>
+  // Draw the castell: pinya rows, then tiers of 4, 4, 2, 1, 1 (a castell de 4 with its dosos, acotxador and enxaneta).
+  const svg = document.getElementById("castell"), NS = "http://www.w3.org/2000/svg";
+  const person = (x, y, w, h) => `<g><circle class="p" cx="${x + w / 2}" cy="${y + 5}" r="5"/><rect class="p" x="${x}" y="${y + 12}" width="${w}" height="${h}" rx="3"/><rect class="faixa" x="${x}" y="${y + 12 + h * .55}" width="${w}" height="4"/></g>`;
+  const rows = [
+    { lvl: 1, n: 9, w: 18, h: 18, y: 286 }, { lvl: 1, n: 7, w: 18, h: 18, y: 254 },
+    { lvl: 2, n: 4, w: 22, h: 26, y: 214 },
+    { lvl: 3, n: 4, w: 20, h: 24, y: 176 },
+    { lvl: 4, n: 2, w: 18, h: 22, y: 142 },
+    { lvl: 5, n: 1, w: 16, h: 18, y: 114 },
+    { lvl: 5, n: 1, w: 14, h: 16, y: 88, top: true },
+  ];
+  for (const r of rows) {
+    const g = document.createElementNS(NS, "g");
+    g.dataset.lvl = r.lvl;
+    const gap = r.lvl === 1 ? 5 : 3, total = r.n * r.w + (r.n - 1) * gap;
+    let html = "";
+    for (let i = 0; i < r.n; i++) html += person(110 - total / 2 + i * (r.w + gap), r.y - 12, r.w, r.h);
+    if (r.top) html += `<line class="arm" x1="${110 + 5}" y1="${r.y + 2}" x2="${110 + 16}" y2="${r.y - 22}"/>`;
+    g.innerHTML = html;
+    svg.append(g);
+  }
+
+  const names = { es: ["Pinya", "Tronc", "Terços", "Dosos", "Enxaneta", "Aleta: carregat"], en: ["Base", "Trunk", "Third tier", "Dosos", "Enxaneta", "Hand up: loaded"] };
+  let lang = "es", level = 1;
+  const cap = document.getElementById("tcap");
+  function setLevel(n) {
+    level = n;
+    svg.querySelectorAll("g[data-lvl]").forEach(g => g.classList.toggle("on", +g.dataset.lvl <= Math.min(n, 5)));
+    svg.classList.toggle("loaded", n >= 6);
+    cap.textContent = names[lang][n - 1];
+  }
+  setLevel(1);
+  const io = new IntersectionObserver(es => {
+    for (const e of es) if (e.isIntersecting) setLevel(+e.target.dataset.level);
+  }, { rootMargin: "-45% 0px -45% 0px" });
+  document.querySelectorAll("[data-level]").forEach(s => io.observe(s));
+
+  const tog = document.querySelector("[data-lang-toggle]");
+  tog.addEventListener("click", () => {
+    const toEn = lang === "es"; lang = toEn ? "en" : "es";
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-en]").forEach(el => {
+      if (el.dataset.es === undefined) el.dataset.es = el.innerHTML;
+      el.innerHTML = toEn ? el.dataset.en : el.dataset.es;
+    });
+    tog.textContent = toEn ? "ES" : "EN";
+    tog.setAttribute("aria-label", toEn ? "Leer en español" : "Read in English");
+    setLevel(level);
+  });
+</script>
+</body>
+</html>

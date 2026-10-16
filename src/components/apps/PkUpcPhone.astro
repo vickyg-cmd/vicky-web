@@ -1,0 +1,105 @@
+---
+import Phone from "./Phone.astro";
+import { translations, type Lang } from "../../i18n/translations";
+
+interface Props {
+  lang: Lang;
+}
+
+const t = translations[Astro.props.lang];
+const CIRC = 314.16; // 2πr for r = 50
+---
+
+<Phone time="8:02" id="pk">
+  <div class="view pk" data-pos="center">
+    <p class="pk__h">PK UPC</p>
+    <p class="pk__sub">Rambla Sant Nebridi · Terrassa</p>
+    <div class="ring">
+      <svg viewBox="0 0 120 120" aria-hidden="true">
+        <circle class="ring__bg" cx="60" cy="60" r="50"></circle>
+        <circle class="ring__fg" cx="60" cy="60" r="50" stroke-dasharray={CIRC} stroke-dashoffset={CIRC}></circle>
+      </svg>
+      <div class="ring__num"><b aria-live="polite">0</b><small>{t.pk_free_of}</small></div>
+    </div>
+    <div class="lot" aria-hidden="true">{Array.from({ length: 75 }, () => <i></i>)}</div>
+    <button type="button" class="pk__refresh">{t.pk_refresh}</button>
+    <p class="note">{t.pk_note}</p>
+  </div>
+</Phone>
+
+<style>
+  .pk { background: #0E2A3A; color: #fff; }
+  .pk__h { margin: 6px 0 0; font: 900 26px var(--app); }
+  .pk__sub { margin: 0 0 14px; font: 600 13px var(--app); opacity: 0.8; }
+  .ring { position: relative; width: 170px; height: 170px; margin: 4px auto 12px; }
+  .ring svg { width: 100%; height: 100%; rotate: -90deg; }
+  .ring__bg { fill: none; stroke: rgb(255 255 255 / 0.14); stroke-width: 14; }
+  .ring__fg {
+    fill: none;
+    stroke: #5BE1A0;
+    stroke-width: 14;
+    stroke-linecap: round;
+    transition:
+      stroke-dashoffset calc(0.6s / var(--speed)) cubic-bezier(0.3, 0.8, 0.2, 1),
+      stroke 0.3s;
+  }
+  .ring__num { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+  .ring__num b { font: 900 46px/1 var(--app); font-variant-numeric: tabular-nums; }
+  .ring__num small { font: 700 12px var(--app); opacity: 0.8; }
+  .lot { display: grid; grid-template-columns: repeat(15, 1fr); gap: 3px; margin-bottom: 12px; }
+  .lot i { aspect-ratio: 1 / 1.5; border-radius: 2px; background: #E8385A; transition: background 0.2s; }
+  .lot i.is-free { background: #5BE1A0; }
+  .pk__refresh {
+    margin-top: auto;
+    padding: 14px;
+    border: 0;
+    border-radius: 18px;
+    background: #fff;
+    color: #0E2A3A;
+    font: 900 17px var(--app);
+    cursor: pointer;
+  }
+  .pk__refresh:active { transform: scale(0.97); }
+  .pk .note { margin-top: 8px; background: rgb(255 255 255 / 0.12); color: #fff; }
+</style>
+
+<script>
+  import { speed, reducedMotion } from "../../lib/speed";
+
+  // Demo data only: each refresh deals a new morning of 0 to 19 free spaces,
+  // and the spaces flip one by one, at the pace the speed button sets.
+  const pk = document.getElementById("pk")!;
+  const spaces = [...pk.querySelectorAll<HTMLElement>(".lot i")];
+  const arc = pk.querySelector<SVGCircleElement>(".ring__fg")!;
+  const count = pk.querySelector<HTMLElement>(".ring__num b")!;
+  const CIRC = 314.16;
+  let timers: number[] = [];
+
+  function deal() {
+    timers.forEach(clearTimeout);
+    timers = [];
+    const n = Math.floor(Math.random() * 20);
+    const free = new Set<number>();
+    while (free.size < n) free.add(Math.floor(Math.random() * spaces.length));
+    arc.style.strokeDashoffset = String(CIRC * (1 - n / 75));
+    arc.style.stroke = n < 5 ? "#E8385A" : "#5BE1A0";
+    count.textContent = String(n);
+
+    const order = spaces.map((_, i) => i).sort(() => Math.random() - 0.5);
+    const step = reducedMotion() ? 0 : 9 / speed();
+    order.forEach((i, k) => {
+      const flip = () => spaces[i].classList.toggle("is-free", free.has(i));
+      if (!step) flip();
+      else timers.push(window.setTimeout(flip, k * step));
+    });
+  }
+
+  pk.querySelector(".pk__refresh")!.addEventListener("click", deal);
+
+  // First deal when the phone comes into view, so the flip is seen.
+  new IntersectionObserver(([e], io) => {
+    if (!e.isIntersecting) return;
+    io.disconnect();
+    deal();
+  }, { threshold: 0.4 }).observe(pk);
+</script>

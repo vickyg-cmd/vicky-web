@@ -1,5 +1,9 @@
 ---
+import "@fontsource-variable/bricolage-grotesque/standard.css";
+import "@fontsource-variable/nunito/wght.css";
+import "@fontsource-variable/outfit/wght.css";
 import "../styles/global.css";
+import bricolageLatin from "@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-standard-normal.woff2?url";
 import { langs, langPath, translations, ROOT_LANG, type Lang } from "../i18n/translations";
 import { SITE_NAME, BRAND_COLOR } from "../config";
 
@@ -13,7 +17,7 @@ interface Props {
   noindex?: boolean;
   /** The languages this page exists in. A blog post may not have all three. */
   alternates?: Lang[];
-  /** Share image path, e.g. "/og/gl/some-post.png". Defaults to the language's site card. */
+  /** Share image path, e.g. "/og/en/some-post.png". Defaults to the language's site card. */
   ogImage?: string;
   /** What the share image shows. Defaults to t.og_alt. */
   ogImageAlt?: string;
@@ -37,7 +41,7 @@ const pageDescription = description ?? t.meta_description;
 const canonical = new URL(langPath(lang, subpath), Astro.site);
 // Site cards and post cards are rendered by scripts/og.mjs, one per language.
 const ogImageUrl = new URL(ogImage ?? `/og/og-${lang}.png`, Astro.site).href;
-const ogLocales: Record<Lang, string> = { es: "es_ES", gl: "gl_ES", en: "en_US" };
+const ogLocales: Record<Lang, string> = { es: "es_ES", en: "en_US", ca: "ca_ES" };
 // x-default points at the root language when the page has one, else the first it has.
 const xDefault = alternates.includes(ROOT_LANG) ? ROOT_LANG : alternates[0];
 ---
@@ -53,6 +57,7 @@ const xDefault = alternates.includes(ROOT_LANG) ? ROOT_LANG : alternates[0];
     {!noindex && <link rel="canonical" href={canonical} />}
     {!noindex && alternates.length > 1 && alternates.map((l) => <link rel="alternate" hreflang={l} href={new URL(langPath(l, subpath), Astro.site)} />)}
     {!noindex && alternates.length > 1 && <link rel="alternate" hreflang="x-default" href={new URL(langPath(xDefault, subpath), Astro.site)} />}
+    <link rel="preload" href={bricolageLatin} as="font" type="font/woff2" crossorigin />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta name="theme-color" content={BRAND_COLOR} />
 

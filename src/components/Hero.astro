@@ -1,0 +1,259 @@
+---
+import { translations, type Lang } from "../i18n/translations";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = translations[lang];
+---
+
+<!-- Without JS, or with reduced motion, this is a plain settled hero. With JS
+     the intro flicks through t.intro_lines once per visit, then settles. -->
+<header class="stage" id="top" data-lines={JSON.stringify(t.intro_lines)}>
+  <script is:inline>
+    // Runs before first paint so the settled hero never flashes before the intro.
+    (function () {
+      var stage = document.currentScript.parentElement;
+      var seen = false;
+      try { seen = sessionStorage.getItem("intro") === "1"; } catch (e) {}
+      if (!seen && !matchMedia("(prefers-reduced-motion: reduce)").matches) stage.classList.add("is-playing");
+    })();
+  </script>
+
+  <div class="say" aria-hidden="true"><p class="say__word"></p></div>
+  <div class="stage__bar wrap">
+    <div class="dots" aria-hidden="true"></div>
+    <button type="button" class="skip" data-skip>{t.intro_skip}</button>
+  </div>
+
+  <div class="settled wrap">
+    <h1 tabindex="-1">
+      {t.hero_parts.map((p) => <><span class:list={["part", p.tone && `part--${p.tone}`]}>{p.text}</span>{p.br && <br class="phone-br" />}{" "}</>)}
+    </h1>
+    <p class="settled__lede">{t.hero_lede}</p>
+    <div class="settled__acts">
+      <a class="btn" href="#apps">{t.hero_cta}</a>
+      <button type="button" class="btn btn--ghost" data-again>{t.hero_again}</button>
+    </div>
+    <p class="settled__me">
+      <img src="/img/vicky-avatar.webp" alt="" width="160" height="160" />
+      <span>{t.hero_me}</span>
+    </p>
+  </div>
+</header>
+
+<style>
+  .stage {
+    min-height: calc(100dvh - var(--nav-h));
+    display: grid;
+    grid-template-rows: 1fr auto;
+    background: var(--green);
+    color: var(--ink);
+    transition: background calc(0.12s / var(--speed));
+  }
+
+  /* Intro tones: each line gets the next one. */
+  .stage[data-tone="0"] { background: var(--green); }
+  .stage[data-tone="1"] { background: var(--sun); }
+  .stage[data-tone="2"] { background: var(--red); }
+  .stage[data-tone="3"] { background: var(--ink); color: var(--sun); }
+  .stage[data-tone="4"] { background: var(--blue); }
+  .stage[data-tone="5"] { background: var(--paper); }
+
+  .say,
+  .stage__bar {
+    display: none;
+  }
+  .stage.is-playing .say {
+    display: grid;
+    place-items: center;
+    padding-inline: var(--gutter);
+    text-align: center;
+    cursor: pointer;
+  }
+  .stage.is-playing .stage__bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 12px;
+  }
+  .stage.is-playing .settled {
+    display: none;
+  }
+
+  .say__word {
+    font-weight: 800;
+    font-size: clamp(4.2rem, 19vw, 12rem);
+    line-height: 0.9;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+  .say__word.is-pop {
+    animation: pop calc(0.18s / var(--speed)) cubic-bezier(0.2, 1.6, 0.4, 1);
+  }
+  @keyframes pop {
+    from { transform: scale(0.8) rotate(-3deg); opacity: 0; }
+  }
+
+  .dots {
+    flex: 1;
+    display: flex;
+    gap: 6px;
+  }
+  .dots :global(i) {
+    flex: 1;
+    height: 4px;
+    border-radius: 4px;
+    background: currentColor;
+    opacity: 0.18;
+  }
+  .dots :global(i.is-on) {
+    opacity: 1;
+  }
+  .skip {
+    min-height: 44px;
+    padding: 0 1rem;
+    border: 2px solid currentColor;
+    border-radius: 999px;
+    background: transparent;
+    color: inherit;
+    font: 700 0.95rem var(--sans);
+    cursor: pointer;
+  }
+
+  .settled {
+    grid-row: 1 / -1;
+    display: grid;
+    align-content: end;
+    padding-block: 2rem clamp(2rem, 5vw, 3.5rem);
+  }
+  /* Phones: the intro still fills the screen, but the settled hero only takes
+     the height it needs, so a tall phone gets no empty band and the apps
+     section starts right below. The headline breaks on set lines. */
+  @media (max-width: 699px) {
+    .stage:not(.is-playing) {
+      min-height: auto;
+    }
+    .settled {
+      padding-block: 2.25rem 2.5rem;
+    }
+    h1 {
+      font-size: 12vw;
+    }
+  }
+  @media (min-width: 700px) {
+    .phone-br {
+      display: none;
+    }
+  }
+  h1 {
+    font-weight: 800;
+    font-size: clamp(3.2rem, 11vw, 9rem);
+    line-height: 0.88;
+    letter-spacing: -0.04em;
+    outline: none;
+  }
+  .part {
+    display: inline-block;
+    padding: 0 0.08em;
+    margin: 0.03em 0;
+    border-radius: 0.12em;
+  }
+  .part--a {
+    background: var(--ink);
+    color: var(--green);
+    font-stretch: 75%;
+  }
+  .part--b {
+    background: var(--sun);
+    rotate: -2deg;
+  }
+  .part--c {
+    background: var(--red);
+    font-stretch: 75%;
+    rotate: 1.5deg;
+  }
+  .settled__lede {
+    max-width: 38ch;
+    margin: 1.25rem 0 1.5rem;
+    font-size: clamp(1.1rem, 2vw, 1.35rem);
+  }
+  .settled__acts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .settled__me {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-top: 1.75rem;
+    max-width: 40ch;
+    font-weight: 600;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-again] { display: none; }
+  }
+  .settled__me img {
+    flex: none;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid var(--ink);
+  }
+</style>
+
+<script>
+  import { speed } from "../lib/speed";
+
+  const stage = document.querySelector<HTMLElement>(".stage")!;
+  const word = stage.querySelector<HTMLElement>(".say__word")!;
+  const dots = stage.querySelector<HTMLElement>(".dots")!;
+  const h1 = stage.querySelector<HTMLElement>("h1")!;
+  const lines: string[] = JSON.parse(stage.dataset.lines!);
+  const TONES = 6;
+  let timer = 0;
+
+  lines.forEach(() => dots.append(document.createElement("i")));
+
+  function settle(focus = false) {
+    clearTimeout(timer);
+    stage.classList.remove("is-playing");
+    delete stage.dataset.tone;
+    try {
+      sessionStorage.setItem("intro", "1");
+    } catch {}
+    if (focus) h1.focus();
+  }
+
+  function play() {
+    stage.classList.add("is-playing");
+    let i = 0;
+    const tick = () => {
+      if (i >= lines.length) return settle();
+      stage.dataset.tone = String(i % TONES);
+      word.textContent = lines[i];
+      // Alternate narrow and normal width, like someone changing gear mid-sentence.
+      word.style.fontStretch = i % 2 ? "75%" : "100%";
+      word.classList.remove("is-pop");
+      void word.offsetWidth;
+      word.classList.add("is-pop");
+      [...dots.children].forEach((d, k) => d.classList.toggle("is-on", k <= i));
+      const pause = lines[i].length > 9 ? 560 : 420;
+      i++;
+      timer = window.setTimeout(tick, pause / speed());
+    };
+    tick();
+  }
+
+  if (stage.classList.contains("is-playing")) play();
+  stage.querySelector(".say")!.addEventListener("click", () => settle(true));
+  stage.querySelector("[data-skip]")!.addEventListener("click", () => settle(true));
+  stage.querySelector("[data-again]")!.addEventListener("click", () => {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    play();
+    stage.querySelector<HTMLElement>("[data-skip]")!.focus();
+  });
+</script>

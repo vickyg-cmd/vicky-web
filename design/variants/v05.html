@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Victoria González Malavé · Desliza</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Onest:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* Shape: a swipe deck, like an app's onboarding. One card per idea, flicked sideways.
+     Color: one saturated card at a time, all from TermoTrendy's icon plus the lilac of her blazer. */
+  :root {
+    --brand: #E8385A;
+    --sun: #EAD94C;
+    --sky: #82BCD3;
+    --green: #0B6A4C;
+    --lilac: #C7B6F2;
+    --paper: #F4F2EE;
+    --ink: #111014;
+    --muted: #3D3A42;
+    --serif: "Unbounded", system-ui, sans-serif;
+    --sans: "Onest", system-ui, sans-serif;
+    --mono: ui-monospace, monospace;
+    --radius: 34px;
+    --gutter: 16px;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--ink); color: var(--ink); font: 400 17px/1.45 var(--sans); overflow: hidden; }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
+
+  .bar { position: fixed; z-index: 5; top: 0; left: 0; right: 0; padding: 12px var(--gutter) 0; display: grid; gap: 10px; pointer-events: none; }
+  .segs { display: flex; gap: 5px; max-width: 760px; width: 100%; margin: 0 auto; }
+  .segs i { flex: 1; height: 4px; border-radius: 4px; background: rgba(255,255,255,.28); overflow: hidden; }
+  .segs i b { display: block; height: 100%; width: 0; background: #fff; }
+  .row { display: flex; justify-content: space-between; align-items: center; max-width: 760px; width: 100%; margin: 0 auto; color: #fff; pointer-events: auto; }
+  .row .me { display: flex; align-items: center; gap: 10px; font: 700 .9rem var(--sans); }
+  .row .me img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; object-position: 50% 25%; border: 2px solid #fff; }
+  .row button { font: 700 .85rem var(--sans); min-height: 44px; min-width: 52px; border-radius: 999px; border: 0; background: rgba(255,255,255,.16); color: #fff; cursor: pointer; }
+
+  .deck { height: 100%; display: flex; gap: 18px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; padding: 84px max(var(--gutter), calc(50vw - 230px)) 84px; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .deck::-webkit-scrollbar { display: none; }
+  .card { flex: 0 0 min(460px, calc(100vw - 32px)); scroll-snap-align: center; scroll-snap-stop: always; border-radius: var(--radius); padding: 28px 26px; position: relative; overflow: hidden; display: flex; flex-direction: column; min-height: 0; }
+  .card > * { position: relative; }
+  .card h2 { font: 900 clamp(2.1rem, 8vw, 2.9rem)/.95 var(--serif); margin: 0 0 14px; letter-spacing: -.02em; text-wrap: balance; }
+  .card p { margin: 0 0 12px; font-size: 1.05rem; }
+  .card .k { font: 700 .8rem var(--sans); opacity: .8; margin: 0 0 10px; }
+  .card .push { margin-top: auto; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 54px; padding: 0 22px; border-radius: 18px; background: var(--ink); color: #fff; font: 700 1rem var(--sans); text-decoration: none; border: 0; cursor: pointer; transition: transform .12s; }
+  .btn:active { transform: scale(.96); }
+  .btn img { width: 30px; height: 30px; border-radius: 8px; }
+
+  /* Card content slides a touch as the card snaps in */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .card > .in { animation: slide linear both; animation-timeline: view(inline); animation-range: entry 0% cover 50%; }
+      @keyframes slide { from { transform: translateX(60px); opacity: .2; } to { transform: none; opacity: 1; } }
+    }
+  }
+
+  /* 1 hello */
+  .c-hi { background: var(--sun); }
+  .c-hi .big { font: 900 clamp(4.4rem, 22vw, 7.2rem)/.82 var(--serif); margin: 6px 0 18px; letter-spacing: -.04em; }
+  .c-hi .big span { display: block; }
+  .c-hi .big span:last-child { color: var(--brand); }
+  .c-hi .face { width: min(72%, 300px); height: auto; aspect-ratio: 1; border-radius: 50%; object-fit: cover; object-position: 50% 25%; border: 5px solid var(--ink); margin: 4px 0 18px auto; display: block; rotate: 6deg; }
+  .hint { font: 700 .95rem var(--sans); display: flex; align-items: center; gap: 8px; }
+  .hint svg { width: 26px; }
+  @media (prefers-reduced-motion: no-preference) { .hint svg { animation: nudge 1s ease-in-out infinite; } @keyframes nudge { 50% { translate: 6px 0; } } }
+
+  /* 2 TermoTrendy */
+  .c-tt { background: var(--sky); }
+  .c-tt .logo { font: 900 2.1rem/1 var(--serif); letter-spacing: -.03em; margin: 0 0 12px; }
+  .c-tt .logo b { color: #C91F43; } .c-tt .logo span { color: var(--green); }
+  .c-tt .shot { position: relative; height: 46%; min-height: 220px; margin: 4px 0 16px; }
+  .c-tt .shot img { position: absolute; height: 100%; width: auto; max-width: 54%; object-fit: cover; object-position: top; border-radius: 22px; border: 3px solid var(--ink); }
+  .c-tt .shot img:first-child { left: 0; rotate: -5deg; }
+  .c-tt .shot img:last-child { right: 0; rotate: 4deg; top: 10px; }
+
+  /* 3 flow */
+  .c-flow { background: var(--brand); }
+  .flow { list-style: none; padding: 0; margin: 6px 0 0; display: grid; gap: 12px; }
+  .flow li { background: rgba(255,255,255,.92); border-radius: 22px; padding: 16px 18px; display: grid; grid-template-columns: 46px 1fr; gap: 14px; align-items: center; }
+  .flow .ic { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; font: 900 1.1rem var(--serif); color: #fff; }
+  .flow li:nth-child(1) .ic { background: var(--green); } .flow li:nth-child(2) .ic { background: var(--sky); color: var(--ink); } .flow li:nth-child(3) .ic { background: var(--ink); }
+  .flow h3 { margin: 0; font: 700 1.05rem var(--sans); }
+  .flow p { margin: 2px 0 0; font-size: .92rem; color: var(--muted); }
+
+  /* 4 PK UPC */
+  .c-pk { background: var(--green); color: #fff; }
+  .lot { display: grid; grid-template-columns: repeat(15, 1fr); gap: 4px; margin: 6px 0 14px; }
+  .lot i { aspect-ratio: 1 / 1.6; border-radius: 4px; background: rgba(255,255,255,.18); }
+  .lot i.f { background: var(--sun); }
+  .pk-num { font: 900 3.4rem/1 var(--serif); margin: 0; letter-spacing: -.03em; }
+  .pk-num small { font: 700 1rem var(--sans); opacity: .85; letter-spacing: 0; }
+  .tag { display: inline-block; font: 700 .78rem var(--sans); padding: 5px 10px; border-radius: 999px; background: rgba(255,255,255,.18); margin-bottom: 12px; }
+
+  /* 5 now */
+  .c-now { background: var(--paper); }
+  .jobs { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 0; }
+  .jobs li { padding: 14px 0; border-bottom: 2px solid var(--ink); display: grid; gap: 2px; }
+  .jobs li:first-child { border-top: 2px solid var(--ink); }
+  .jobs b { font: 700 1.08rem var(--sans); }
+  .jobs span { color: var(--muted); font-size: .92rem; }
+  .jobs li.now b::after { content: " ●"; color: var(--brand); }
+
+  /* 6 me */
+  .c-me { background: var(--lilac); }
+  .c-me img.big { width: 100%; height: 42%; min-height: 200px; object-fit: cover; object-position: 50% 22%; border-radius: 24px; margin-bottom: 16px; }
+  .ph { border: 2px dashed var(--ink); border-radius: 16px; padding: 12px 14px; font-size: .95rem; margin: 0 0 12px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chips span { background: var(--ink); color: #fff; border-radius: 999px; padding: 6px 12px; font: 700 .85rem var(--sans); }
+
+  /* 7 contact */
+  .c-hey { background: var(--ink); color: #fff; outline: 2px solid rgba(255,255,255,.18); outline-offset: -2px; }
+  .c-hey h2 { color: var(--sun); }
+  .mail { font: 700 clamp(1.05rem, 4.6vw, 1.35rem) var(--sans); overflow-wrap: anywhere; margin: 6px 0 16px; user-select: all; }
+  .c-hey .btn { background: var(--sun); color: var(--ink); }
+  .links { display: flex; gap: 18px; margin-top: 18px; font-weight: 700; }
+  .links a { padding: 10px 0; }
+  .status { min-height: 1.4em; font-size: .9rem; color: var(--sun); margin: 8px 0 0; }
+
+  .nav { position: fixed; z-index: 5; bottom: 18px; left: 0; right: 0; display: flex; justify-content: center; gap: 10px; }
+  .nav button { width: 52px; height: 52px; border-radius: 50%; border: 0; background: #fff; color: var(--ink); cursor: pointer; display: grid; place-items: center; }
+  .nav button:disabled { opacity: .35; cursor: default; }
+  .nav svg { width: 22px; }
+  @media (max-height: 640px) { .card h2 { font-size: 1.8rem; } .c-tt .shot { min-height: 160px; } }
+</style>
+</head>
+<body>
+<div class="bar">
+  <div class="segs" aria-hidden="true"></div>
+  <div class="row">
+    <span class="me"><img src="img/vicky.jpg" alt="">Victoria González Malavé</span>
+    <button type="button" data-lang-toggle aria-label="Read in English">EN</button>
+  </div>
+</div>
+
+<main class="deck" tabindex="0" aria-label="Tarjetas: desliza para pasar">
+  <section class="card c-hi" aria-label="Hola">
+    <div class="in">
+      <p class="big"><span>¡Hola!</span><span>Hi!</span></p>
+    </div>
+    <img class="face in" src="img/vicky.jpg" alt="Victoria González Malavé" width="720" height="797">
+    <div class="in push">
+      <p data-en="I'm Victoria. I make apps for iPhone and Android, in Barcelona.">Soy Victoria. Hago apps para iPhone y Android, en Barcelona.</p>
+      <p class="hint"><span data-en="Swipe, it's quick">Desliza, es rápido</span><svg viewBox="0 0 26 14" aria-hidden="true"><path d="M1 7h22M17 1l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></p>
+    </div>
+  </section>
+
+  <section class="card c-tt" aria-label="TermoTrendy">
+    <p class="k in" data-en="My first app on the App Store">Mi primera app en el App Store</p>
+    <p class="logo in"><b>termo</b><span>trendy</span></p>
+    <div class="shot in">
+      <img src="img/tt-home.jpg" alt="TermoTrendy, pantalla de inicio" width="300" height="650">
+      <img src="img/tt-weather.jpg" alt="TermoTrendy, el tiempo en Barcelona" width="300" height="650">
+    </div>
+    <div class="in push">
+      <p data-en="It picks your outfit for the day from your own closet and the weather. Live since January 2026. Free.">Elige tu outfit del día con tu armario y el tiempo. Publicada en enero de 2026. Gratis.</p>
+      <a class="btn" href="https://apps.apple.com/es/app/termotrendy/id6757545419"><img src="img/tt-icon-256.jpg" alt=""><span data-en="Get it on the App Store">Descargar en el App Store</span></a>
+    </div>
+  </section>
+
+  <section class="card c-flow" aria-label="Cómo funciona TermoTrendy">
+    <p class="k in" data-en="How TermoTrendy works">Cómo funciona TermoTrendy</p>
+    <h2 class="in" data-en="Three taps and you're dressed.">Tres toques y a la calle.</h2>
+    <ol class="flow in">
+      <li><span class="ic">+</span><div><h3 data-en="Add your clothes">Añade tu ropa</h3><p data-en="Upload the things you actually wear.">Sube lo que de verdad te pones.</p></div></li>
+      <li><span class="ic">12°</span><div><h3 data-en="Check the weather">Mira el tiempo</h3><p data-en="Search a city or use your location.">Busca una ciudad o usa tu ubicación.</p></div></li>
+      <li><span class="ic">✓</span><div><h3 data-en="Make the outfit">Genera el outfit</h3><p data-en="One button. Made in SwiftUI.">Un botón. Hecha en SwiftUI.</p></div></li>
+    </ol>
+  </section>
+
+  <section class="card c-pk" aria-label="PK UPC">
+    <p class="k in" data-en="Second app · SwiftUI">Segunda app · SwiftUI</p>
+    <h2 class="in">PK UPC</h2>
+    <span class="tag in" data-en="On hold">En pausa</span>
+    <p class="in" data-en="The Rambla Sant Nebridi lot at the UPC Terrassa campus fills up every class day. This app shows the free spaces before you drive there.">El párquing de Rambla Sant Nebridi, en el campus UPC de Terrassa, se llena todos los días de clase. Esta app te dice si hay sitio antes de ir.</p>
+    <div class="lot in" id="lot" aria-hidden="true"></div>
+    <p class="pk-num in push">75 <small data-en="spaces · at least 150 drivers a day, by my count">plazas · al menos 150 conductores al día, según mis cuentas</small></p>
+  </section>
+
+  <section class="card c-now" aria-label="Ahora">
+    <p class="k in" data-en="Right now">Ahora mismo</p>
+    <h2 class="in" data-en="Busy, and happy about it.">Ocupada, y encantada.</h2>
+    <ul class="jobs in">
+      <li class="now"><b data-en="Junior software architect · NTT DATA">Arquitecta de software junior · NTT DATA</b><span data-en="Since October 2026">Desde octubre de 2026</span></li>
+      <li class="now"><b data-en="FlutterFlow dev and tech lead · two.zero">Dev FlutterFlow y tech lead · two.zero</b><span data-en="Since September 2025">Desde septiembre de 2025</span></li>
+      <li><b data-en="Teaching assistant · Epitech">Asistente docente · Epitech</b><span data-en="March to June 2026">De marzo a junio de 2026</span></li>
+      <li><b data-en="Fullstack intern · Inmatic">Prácticas fullstack · Inmatic</b><span data-en="June to December 2025">De junio a diciembre de 2025</span></li>
+      <li><b>Epitech · Bachelor + Máster</b><span data-en="Software engineering, through 2027">Ingeniería de software, hasta 2027</span></li>
+    </ul>
+  </section>
+
+  <section class="card c-me" aria-label="Sobre mí">
+    <img class="big in" src="img/vicky.jpg" alt="Victoria, sonriendo al aire libre" width="720" height="797">
+    <h2 class="in" data-en="Off the screen">Fuera de la pantalla</h2>
+    <p class="ph in" data-en="[Victoria writes a line here about her family]">[Aquí Victoria escribe una frase sobre su familia]</p>
+    <div class="chips in"><span data-en="Climbing 6c">Escalada 6c</span><span data-en="Via ferrata K5">Ferratas K5</span><span data-en="Canyoning">Barrancos</span><span>Snowboard</span></div>
+  </section>
+
+  <section class="card c-hey" id="contacto" aria-label="Contacto">
+    <p class="k in" data-en="Last card">Última tarjeta</p>
+    <h2 class="in" data-en="Shall we make something?">¿Hacemos algo?</h2>
+    <p class="in" data-en="An app, a job, a quick question. I answer fast.">Una app, un puesto, una pregunta rápida. Contesto rápido.</p>
+    <p class="mail in">vickygonzalezmalave@gmail.com</p>
+    <div class="in"><button class="btn" type="button" id="copy" data-en="Copy email">Copiar email</button></div>
+    <p class="status in" role="status" id="copied"></p>
+    <div class="links in"><a href="https://github.com/vickyg-cmd">GitHub</a><a href="https://linkedin.com/in/victoria-gonzalez-malave">LinkedIn</a><a href="https://bsky.app/profile/vickythedev.bsky.social">Bluesky</a></div>
+  </section>
+</main>
+
+<div class="nav">
+  <button type="button" id="prev" aria-label="Anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <button type="button" id="next" aria-label="Siguiente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+</div>
+
+<script>
+  const deck = document.querySelector(".deck"), cards = [...deck.querySelectorAll(".card")];
+  const segs = document.querySelector(".segs");
+  cards.forEach(() => segs.append(Object.assign(document.createElement("i"), { innerHTML: "<b></b>" })));
+  const fills = [...segs.querySelectorAll("b")];
+  const step = () => cards[1].offsetLeft - cards[0].offsetLeft;
+  const current = () => Math.round(deck.scrollLeft / step());
+  function paint() {
+    const pos = deck.scrollLeft / step();
+    fills.forEach((f, i) => f.style.width = Math.max(0, Math.min(1, pos - i + 1)) * 100 + "%");
+    document.getElementById("prev").disabled = pos < .5;
+    document.getElementById("next").disabled = pos > cards.length - 1.5;
+  }
+  deck.addEventListener("scroll", paint, { passive: true }); paint();
+  const go = d => deck.scrollTo({ left: (current() + d) * step(), behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  document.getElementById("prev").onclick = () => go(-1);
+  document.getElementById("next").onclick = () => go(1);
+  addEventListener("keydown", e => { if (e.key === "ArrowRight") go(1); if (e.key === "ArrowLeft") go(-1); });
+  // Vertical wheel flicks the deck on desktop
+  deck.addEventListener("wheel", e => { if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) { e.preventDefault(); deck.scrollLeft += e.deltaY; } }, { passive: false });
+
+  // The lot: 75 spaces, a sample fill to show the idea (not live data)
+  const lot = document.getElementById("lot");
+  for (let i = 0; i < 75; i++) lot.append(Object.assign(document.createElement("i"), { className: [3, 17, 18, 40, 41, 52, 66].includes(i) ? "" : "f" }));
+
+  document.getElementById("copy").onclick = async () => {
+    const out = document.getElementById("copied"), en = document.documentElement.lang === "en";
+    try { await navigator.clipboard.writeText("vickygonzalezmalave@gmail.com"); out.textContent = en ? "Copied. Talk soon!" : "Copiado. ¡Hablamos!"; }
+    catch { getSelection().selectAllChildren(document.querySelector(".mail")); out.textContent = en ? "Selected. Copy it with your keyboard." : "Seleccionado. Cópialo con el teclado."; }
+  };
+
+  const tog = document.querySelector("[data-lang-toggle]");
+  tog.addEventListener("click", () => {
+    const toEn = document.documentElement.lang === "es";
+    document.documentElement.lang = toEn ? "en" : "es";
+    document.querySelectorAll("[data-en]").forEach(el => {
+      if (el.dataset.es === undefined) el.dataset.es = el.innerHTML;
+      el.innerHTML = toEn ? el.dataset.en : el.dataset.es;
+    });
+    tog.textContent = toEn ? "ES" : "EN";
+    tog.setAttribute("aria-label", toEn ? "Leer en español" : "Read in English");
+  });
+</script>
+</body>
+</html>

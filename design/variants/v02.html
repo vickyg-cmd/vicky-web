@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Victoria González Malavé · ¿Qué me pongo?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,800&display=swap" rel="stylesheet">
+<style>
+  /* Look: TermoTrendy itself. Palette, dots and rounded type taken from her app icon and screens.
+     The big radii are the app's own language, not a default. */
+  :root {
+    --brand: #E8385A;     /* tt pink */
+    --brand-ink: #CF2A4B; /* pink dark enough for small text on white */
+    --green: #0B6A4C;
+    --sky: #7BB1C7;
+    --sun: #E3D35E;
+    --paper: #FFFFFF;
+    --ink: #111111;
+    --muted: #4A4A4A;
+    --serif: "Fredoka", ui-rounded, system-ui, sans-serif;
+    --sans: "Nunito Sans", ui-rounded, system-ui, sans-serif;
+    --mono: ui-monospace, monospace;
+    --radius: 28px;
+    --gutter: clamp(16px, 4vw, 48px);
+    --nav-h: 60px;
+    /* set by the weather */
+    --sky-bg: var(--sky);
+    --sky-ink: var(--ink);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: calc(var(--nav-h) + 8px); }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.55 var(--sans); overflow-x: clip; }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  img { max-width: 100%; display: block; }
+
+  nav { position: sticky; top: 0; z-index: 5; height: var(--nav-h); display: flex; align-items: center; gap: .75rem; padding: 0 var(--gutter); background: var(--sky-bg); color: var(--sky-ink); transition: background .6s, color .6s; }
+  nav .who { font: 600 1.05rem var(--serif); text-decoration: none; margin-right: auto; }
+  nav a.l { text-decoration: none; font-weight: 600; padding: .7rem .4rem; }
+  nav button { font: 700 .95rem var(--serif); min-height: 44px; min-width: 52px; border-radius: 999px; border: 2px solid currentColor; background: transparent; color: inherit; cursor: pointer; }
+  @media (max-width: 640px) { nav a.l { display: none; } }
+
+  /* Hero: the tool */
+  .today { position: relative; background: var(--sky-bg); color: var(--sky-ink); padding: clamp(1.5rem, 5vw, 4rem) var(--gutter) clamp(3rem, 8vw, 6rem); overflow: hidden; transition: background .6s, color .6s; }
+  .dots { position: absolute; inset: 0; pointer-events: none; }
+  .dots span { position: absolute; border-radius: 50%; opacity: .9; }
+  .today-in { position: relative; max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: 1.1fr .9fr; gap: 2rem; align-items: center; }
+  @media (max-width: 820px) { .today-in { grid-template-columns: 1fr; } }
+  .q { font: 700 clamp(2.4rem, 7vw, 4.8rem)/1 var(--serif); margin: 0 0 1rem; letter-spacing: -.01em; }
+  .q .t1 { color: inherit; }
+  .hello { font: 600 1.15rem var(--serif); margin: 0 0 .75rem; }
+  .intro { max-width: 36ch; font-size: 1.1rem; margin: 0; }
+  .card { background: #fff; color: var(--ink); border-radius: var(--radius); padding: 1.6rem 1.6rem 1.4rem; box-shadow: 0 10px 0 rgba(0,0,0,.12); }
+  .card .place { font: 600 1.1rem var(--serif); display: flex; gap: .4rem; align-items: center; margin: 0; }
+  .card .place svg { width: 16px; height: 16px; fill: var(--brand); }
+  .card .now { font: 700 clamp(4rem, 12vw, 6rem)/1 var(--serif); color: var(--brand-ink); margin: .35rem 0 0; font-variant-numeric: tabular-nums; }
+  .card .cond { margin: .1rem 0 1rem; color: var(--muted); font-weight: 600; min-height: 1.5em; }
+  .card .wear { font: 600 1.45rem/1.2 var(--serif); margin: 0 0 1.1rem; min-height: 2.4em; }
+  .card label { display: block; font-weight: 600; font-size: .95rem; margin-bottom: .3rem; }
+  .card input[type=range] { width: 100%; accent-color: var(--green); min-height: 44px; }
+  .card .small { font-size: .85rem; color: var(--muted); margin: .6rem 0 0; }
+
+  section { padding: clamp(3rem, 8vw, 6rem) var(--gutter); }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+  h2 { font: 700 clamp(2rem, 5vw, 3.2rem)/1.05 var(--serif); margin: 0 0 1rem; }
+  h2 .tt { color: var(--brand-ink); } h2 .tr { color: var(--green); }
+
+  .app { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1.5rem, 5vw, 4rem); align-items: center; }
+  @media (max-width: 820px) { .app { grid-template-columns: 1fr; } }
+  .shots { display: flex; gap: 1rem; justify-content: center; }
+  .shots img { width: min(44%, 230px); border-radius: 26px; border: 3px solid var(--ink); }
+  .shots img:last-child { transform: translateY(2.5rem); }
+  .facts { list-style: none; padding: 0; margin: 1.25rem 0 1.75rem; display: flex; flex-wrap: wrap; gap: .5rem; }
+  .facts li { border: 2px solid var(--ink); border-radius: 999px; padding: .3rem .85rem; font-weight: 600; font-size: .95rem; }
+  .btn { display: inline-flex; align-items: center; gap: .6rem; min-height: 56px; padding: 0 1.5rem; border-radius: 20px; background: var(--brand); color: var(--ink); font: 600 1.15rem var(--serif); text-decoration: none; box-shadow: 0 6px 0 var(--ink); }
+  .btn:active { transform: translateY(3px); box-shadow: 0 3px 0 var(--ink); }
+  .btn img { width: 32px; height: 32px; border-radius: 8px; }
+
+  .me { background: var(--green); color: #fff; }
+  .me .wrap { display: grid; grid-template-columns: 300px 1fr; gap: clamp(1.5rem, 5vw, 4rem); align-items: center; }
+  @media (max-width: 760px) { .me .wrap { grid-template-columns: 1fr; } }
+  .me figure { margin: 0; position: relative; }
+  .me figure img { height: auto; width: 100%; border-radius: 50%; aspect-ratio: 1; object-fit: cover; object-position: 50% 30%; border: 6px solid var(--sun); }
+  .me figure::after { content: ""; position: absolute; width: 26%; aspect-ratio: 1; border-radius: 50%; background: var(--brand); right: 2%; bottom: 4%; }
+  .me p { font-size: 1.1rem; max-width: 48ch; }
+  .jobs { list-style: none; padding: 0; margin: 1.5rem 0 0; display: grid; gap: .6rem; }
+  .jobs li { display: grid; grid-template-columns: 1.1rem 1fr; gap: .7rem; align-items: baseline; }
+  .jobs li::before { content: ""; width: 1rem; height: 1rem; border-radius: 50%; background: var(--sun); transform: translateY(.15rem); }
+  .jobs li:nth-child(3n+2)::before { background: var(--sky); } .jobs li:nth-child(3n)::before { background: var(--brand); }
+  .jobs small { display: block; opacity: .9; font-size: .9rem; }
+
+  .more { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+  .p { border-radius: var(--radius); padding: 1.4rem; border: 3px solid var(--ink); }
+  .p:nth-child(1) { background: var(--sky); } .p:nth-child(2) { background: var(--sun); } .p:nth-child(3) { background: #fff; } .p:nth-child(4) { background: #fff; }
+  .p h3 { font: 600 1.35rem var(--serif); margin: 0 0 .2rem; }
+  .p .m { font-weight: 800; font-size: .85rem; margin: 0 0 .6rem; }
+  .p p { margin: 0; }
+  .p a { display: inline-block; margin-top: .6rem; font-weight: 800; padding: .3rem 0; }
+
+  footer { background: var(--ink); color: #fff; padding: clamp(3rem, 8vw, 5rem) var(--gutter); }
+  footer .big { font: 700 clamp(1.6rem, 5vw, 3rem)/1.1 var(--serif); margin: 0 0 1rem; }
+  footer .big a { color: var(--sun); display: block; font-size: .7em; overflow-wrap: anywhere; margin-top: .3rem; }
+  footer ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: .25rem 1.5rem; font-weight: 800; }
+  footer ul a { display: inline-block; padding: .6rem 0; }
+  @media (prefers-reduced-motion: reduce) { nav, .today { transition: none; } }
+</style>
+</head>
+<body>
+<nav>
+  <a class="who" href="#">Victoria González Malavé</a>
+  <a class="l" href="#app">TermoTrendy</a>
+  <a class="l" href="#yo" data-en="About">Sobre mí</a>
+  <a class="l" href="#contacto" data-en="Contact">Contacto</a>
+  <button type="button" data-lang-toggle aria-label="Read in English">EN</button>
+</nav>
+
+<header class="today">
+  <div class="dots" aria-hidden="true"></div>
+  <div class="today-in">
+    <div>
+      <p class="hello">¡Hola! Hi! Soy Victoria.</p>
+      <h1 class="q" data-en="What should I wear today?">¿Qué me pongo hoy?</h1>
+      <p class="intro" data-en="I make apps for iPhone. My first one on the App Store answers this question. Here is a small version to try, with Barcelona's real weather.">Hago apps para iPhone. La primera que publiqué en el App Store responde a esta pregunta. Aquí tienes una versión pequeña para probar, con el tiempo real de Barcelona.</p>
+    </div>
+    <div class="card">
+      <p class="place"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 3 3 10.5l7.5 2.9L13.4 21z"/></svg>Barcelona</p>
+      <p class="now"><span id="deg">--</span>°</p>
+      <p class="cond" id="cond" role="status" data-en="Reading the weather…">Leyendo el tiempo…</p>
+      <p class="wear" id="wear"></p>
+      <label for="temp" data-en="Try another temperature">Prueba otra temperatura</label>
+      <input id="temp" type="range" min="-5" max="40" step="1" value="18">
+      <p class="small" data-en="A toy version made for this page. The real app works from the clothes in your own closet.">Versión de juguete hecha para esta página. La app de verdad trabaja con la ropa de tu armario.</p>
+    </div>
+  </div>
+</header>
+
+<section id="app">
+  <div class="wrap app">
+    <div class="shots">
+      <img src="img/tt-home.jpg" alt="TermoTrendy: pantalla de inicio con Crear outfit y Añadir ropa" width="300" height="650">
+      <img src="img/tt-weather.jpg" alt="TermoTrendy: el tiempo en Barcelona, 12 grados y despejado" width="300" height="650">
+    </div>
+    <div>
+      <h2><span class="tt">termo</span><span class="tr">trendy</span></h2>
+      <p data-en="You add the clothes you own, it reads where you are and the weather, and it puts together the day's outfit. Simple on purpose. I made it alone, in SwiftUI.">Subes la ropa que tienes, la app mira dónde estás y el tiempo que va a hacer, y te arma el outfit del día. Sencilla a propósito. La hice yo sola, en SwiftUI.</p>
+      <ul class="facts">
+        <li data-en="On the App Store since 14 Jan 2026">En el App Store desde el 14 ene. 2026</li>
+        <li data-en="Free">Gratis</li>
+        <li data-en="iOS 17.5 or later">iOS 17.5 o posterior</li>
+        <li>SwiftUI</li>
+      </ul>
+      <a class="btn" href="https://apps.apple.com/es/app/termotrendy/id6757545419"><img src="img/tt-icon-256.jpg" alt=""><span data-en="Download TermoTrendy">Descargar TermoTrendy</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="me" id="yo">
+  <div class="wrap">
+    <figure><img src="img/vicky.jpg" alt="Victoria González Malavé, sonriendo al aire libre" width="720" height="797"></figure>
+    <div>
+      <h2 data-en="Who made it">Quién la hizo</h2>
+      <p data-en="I'm Victoria González Malavé, an iOS and Android developer in Barcelona. I've been publishing my own apps since February 2024, and I'm studying the Bachelor + Master in Software Engineering at Epitech, through 2027.">Soy Victoria González Malavé, desarrolladora iOS y Android en Barcelona. Publico apps propias desde febrero de 2024 y estudio el Bachelor + Máster en Ingeniería de Software en Epitech, hasta 2027.</p>
+      <ul class="jobs">
+        <li><span data-en="Junior software architect, NTT DATA<small>October 2026 to now</small>">Arquitecta de software junior, NTT DATA<small>desde octubre de 2026</small></span></li>
+        <li><span data-en="FlutterFlow developer and tech lead, two.zero<small>September 2025 to now</small>">Desarrolladora FlutterFlow y tech lead, two.zero<small>desde septiembre de 2025</small></span></li>
+        <li><span data-en="Teaching assistant and hub manager, Epitech<small>March to June 2026</small>">Asistente docente y hub manager, Epitech<small>de marzo a junio de 2026</small></span></li>
+        <li><span data-en="Fullstack intern, Inmatic<small>June to December 2025</small>">Prácticas fullstack, Inmatic<small>de junio a diciembre de 2025</small></span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 data-en="Also on the go">También en marcha</h2>
+    <div class="more">
+      <article class="p"><h3>PK UPC</h3><p class="m" data-en="SwiftUI · on hold">SwiftUI · en pausa</p><p data-en="Is there a free space in the 75-space lot at the UPC Terrassa campus? Answered before you drive there.">¿Queda sitio en el párquing de 75 plazas del campus UPC de Terrassa? Respondido antes de ir hasta allí.</p></article>
+      <article class="p"><h3>my_hunter</h3><p class="m" data-en="C · Epitech">C · Epitech</p><p data-en="A game about hunting a very annoying Mario Wonder character.">Un juego para cazar a un personaje muy pesado de Mario Wonder.</p><a href="https://github.com/vickyg-cmd/hunter_mario" data-en="See the code">Ver el código</a></article>
+      <article class="p"><h3>my_printf</h3><p class="m" data-en="C · Epitech · team">C · Epitech · en equipo</p><p data-en="printf, rewritten from scratch.">printf, reescrito desde cero.</p><a href="https://github.com/vickyg-cmd/my_printf" data-en="See the code">Ver el código</a></article>
+      <article class="p"><h3 data-en="Off the screen">Fuera de la pantalla</h3><p class="m" data-en="Weekends">Fines de semana</p><p data-en="Gym climbing at 6c, via ferrata at K5, canyoning and rafting.">Rocódromo en 6c, vías ferratas K5, barranquismo y rafting.</p></article>
+    </div>
+  </div>
+</section>
+
+<footer id="contacto">
+  <p class="big"><span data-en="Got an app in mind? ">¿Tienes una app en mente? </span><a href="mailto:vickygonzalezmalave@gmail.com">vickygonzalezmalave@gmail.com</a></p>
+  <ul>
+    <li><a href="https://github.com/vickyg-cmd">GitHub</a></li>
+    <li><a href="https://linkedin.com/in/victoria-gonzalez-malave">LinkedIn</a></li>
+    <li><a href="https://bsky.app/profile/vickythedev.bsky.social">Bluesky</a></li>
+  </ul>
+</footer>
+
+<script>
+  let lang = "es";
+  const T = {
+    es: { wait: "Leyendo el tiempo…", fail: "No he podido leer el tiempo. Mueve el control.", now: "Ahora mismo", tried: "Si hiciera",
+      sky: { 0: "despejado", 1: "algunas nubes", 45: "niebla", 51: "llovizna", 61: "lluvia", 71: "nieve", 80: "chubascos", 95: "tormenta" },
+      wear: [[5, "Abrigo gordo, bufanda y gorro."], [12, "Abrigo y un jersey debajo."], [18, "Chaqueta ligera y vaqueros."], [24, "Manga larga fina, o camiseta con sobrecamisa."], [30, "Camiseta y pantalón corto."], [99, "Lo mínimo, gorra y agua."]],
+      rain: " Y paraguas." },
+    en: { wait: "Reading the weather…", fail: "Couldn't read the weather. Move the slider.", now: "Right now", tried: "If it were",
+      sky: { 0: "clear", 1: "some clouds", 45: "fog", 51: "drizzle", 61: "rain", 71: "snow", 80: "showers", 95: "storm" },
+      wear: [[5, "Heavy coat, scarf and hat."], [12, "Coat with a sweater under it."], [18, "Light jacket and jeans."], [24, "Thin long sleeves, or a tee with an overshirt."], [30, "T-shirt and shorts."], [99, "As little as possible, a cap and water."]],
+      rain: " And an umbrella." }
+  };
+  // Colors per band, from the app icon. Ink pairs computed for contrast.
+  const BANDS = [[12, "#7BB1C7", "#111111"], [18, "#0B6A4C", "#FFFFFF"], [25, "#E3D35E", "#111111"], [99, "#E8385A", "#111111"]];
+  const deg = document.getElementById("deg"), cond = document.getElementById("cond"), wear = document.getElementById("wear"), range = document.getElementById("temp");
+  let live = null; // { t, code }
+
+  const skyWord = code => {
+    const keys = Object.keys(T[lang].sky).map(Number).sort((a, b) => b - a);
+    return T[lang].sky[keys.find(k => code >= k) ?? 0];
+  };
+  const wet = code => (code >= 51 && code <= 67) || (code >= 80 && code <= 82) || code >= 95;
+
+  function show(t, code, isLive) {
+    deg.textContent = Math.round(t);
+    cond.textContent = isLive ? `${T[lang].now}: ${skyWord(code)}` : `${T[lang].tried} ${Math.round(t)}°`;
+    const line = T[lang].wear.find(([max]) => t < max)[1];
+    wear.textContent = line + (isLive && wet(code) ? T[lang].rain : "");
+    const [, bg, ink] = BANDS.find(([max]) => t < max);
+    document.documentElement.style.setProperty("--sky-bg", bg);
+    document.documentElement.style.setProperty("--sky-ink", ink);
+  }
+
+  range.addEventListener("input", () => show(+range.value, 0, false));
+
+  fetch("https://api.open-meteo.com/v1/forecast?latitude=41.39&longitude=2.17&current=temperature_2m,weather_code&timezone=Europe%2FMadrid")
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(d => { live = { t: d.current.temperature_2m, code: d.current.weather_code }; range.value = Math.round(live.t); show(live.t, live.code, true); })
+    .catch(() => { cond.textContent = T[lang].fail; show(+range.value, 0, false); cond.textContent = T[lang].fail; });
+
+  // Dots from the app icon, placed once.
+  const dots = document.querySelector(".dots"), cols = ["#E8385A", "#0B6A4C", "#E3D35E", "#FFFFFF"];
+  [[2, 10, 70], [90, 4, 110], [98, 58, 60], [3, 96, 90], [46, 2, 34], [30, 100, 40], [64, 99, 70], [99, 30, 28]].forEach(([x, y, s], i) => {
+    const d = document.createElement("span");
+    Object.assign(d.style, { left: x + "%", top: y + "%", width: s + "px", height: s + "px", background: cols[i % 4], translate: "-50% -50%" });
+    dots.append(d);
+  });
+
+  const tog = document.querySelector("[data-lang-toggle]");
+  tog.addEventListener("click", () => {
+    const toEn = lang === "es"; lang = toEn ? "en" : "es";
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-en]").forEach(el => {
+      if (el.dataset.es === undefined) el.dataset.es = el.innerHTML;
+      el.innerHTML = toEn ? el.dataset.en : el.dataset.es;
+    });
+    tog.textContent = toEn ? "ES" : "EN";
+    tog.setAttribute("aria-label", toEn ? "Leer en español" : "Read in English");
+    if (live && +range.value === Math.round(live.t)) show(live.t, live.code, true); else show(+range.value, 0, false);
+  });
+</script>
+</body>
+</html>

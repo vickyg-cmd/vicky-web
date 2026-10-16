@@ -1,0 +1,357 @@
+---
+import { translations, type Lang } from "../i18n/translations";
+import { events, monthIndex, FIRST, NOW, type Kind } from "../data/timeline";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = translations[lang];
+const locale = { es: "es-ES", ca: "ca-ES", en: "en-US" }[lang];
+const total = monthIndex(NOW) + 1;
+const short = new Intl.DateTimeFormat(locale, { month: "short", year: "numeric", timeZone: "UTC" });
+const dateOf = (ym: string) => new Date(Date.UTC(+ym.slice(0, 4), +ym.slice(5, 7) - 1, 1));
+const range = (e: (typeof events)[number]) =>
+  !e.end ? short.format(dateOf(e.start)) : `${short.format(dateOf(e.start))} – ${e.end === "now" ? t.tl_today : short.format(dateOf(e.end))}`;
+
+const rows = events.map((e) => {
+  const a = monthIndex(e.start);
+  const b = e.end ? monthIndex(e.end) : a;
+  return { ...e, a, b, point: !e.end };
+});
+const years = Array.from({ length: +NOW.slice(0, 4) - +FIRST.slice(0, 4) + 1 }, (_, i) => +FIRST.slice(0, 4) + i);
+const kinds: Kind[] = ["study", "work", "app", "life"];
+const last = total - 1;
+---
+
+<section class="tl section" aria-labelledby="tl-title">
+  <div class="wrap">
+    <h2 id="tl-title">{t.tl_title}</h2>
+    <p class="tl__body">{t.tl_body}</p>
+
+    <ul class="legend">
+      {kinds.map((k) => <li><i class={`sw sw--${k}`}></i>{t.tl_kinds[k]}</li>)}
+    </ul>
+
+    <div class="readout">
+      <p class="when" aria-hidden="true">{NOW.slice(0, 4)}</p>
+      <p class="count" aria-live="polite"></p>
+      <button type="button" class="play" aria-pressed="false" data-play={t.tl_play} data-pause={t.tl_pause}>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-play" d="M7 4v16l13-8z" /><path class="i-pause" d="M6 4h4v16H6zm8 0h4v16h-4z" /></svg>
+        <span>{t.tl_play}</span>
+      </button>
+    </div>
+
+    <div class="gantt" style={`--total: ${total}; --pos: ${last}`} data-total={total} data-first={FIRST} data-locale={locale}>
+      {rows.map((r, i) => (
+        <i
+          class:list={["mark", `mark--${r.kind}`, { "mark--point": r.point }]}
+          style={`--a: ${r.a}; --b: ${r.b}; --row: ${i}`}
+          data-i={i}
+        ></i>
+      ))}
+      <span class="playhead" aria-hidden="true"></span>
+      <input type="range" min="0" max={last} value={last} step="1" aria-label={t.tl_date} />
+    </div>
+    <div class="years" aria-hidden="true" style={`--total: ${total}`}>
+      {years.map((y) => <span style={`--a: ${monthIndex(`${y}-01`)}`}>{y}</span>)}
+    </div>
+
+    <ul class="now-list">
+      {rows.map((r, i) => (
+        <li data-i={i} data-a={r.a} data-b={r.b} class={`item item--${r.kind}`}>
+          <b>{r.title[lang]}</b>
+          <span>{t.tl_kinds[r.kind]} · {range(r)}</span>
+        </li>
+      ))}
+    </ul>
+    <template data-count-one>{t.tl_count_one}</template>
+    <template data-count-many>{t.tl_count_many}</template>
+  </div>
+</section>
+
+<style>
+  /* Kind colors from her palette. Apps are sun, which is faint on cream, so its
+     marks carry an ink outline; every item also names its kind in text. */
+  .tl {
+    --study: var(--blue);
+    --work: var(--red);
+    --app: var(--sun);
+    --life: var(--muted);
+    border-top: 2px solid var(--ink);
+  }
+  .tl__body {
+    max-width: 40ch;
+    font-size: 1.2rem;
+  }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.2rem;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+  .legend li {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  .sw {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+  }
+  .sw--study { background: var(--study); }
+  .sw--work { background: var(--work); }
+  .sw--app { background: var(--app); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .sw--life { background: var(--life); }
+
+  .readout {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1.25rem;
+    margin: 2rem 0 1rem;
+  }
+  .when {
+    font-weight: 800;
+    font-size: clamp(2.2rem, 7vw, 4rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+    min-width: 7ch;
+  }
+  .count {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-right: auto;
+  }
+  /* Phones: the date gets its own line, so its changing length can't push the
+     Play button around. Play always starts the next line, count beside it. */
+  @media (max-width: 699px) {
+    .readout {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 0.75rem 1rem;
+    }
+    .when {
+      grid-column: 1 / -1;
+    }
+    .count {
+      grid-row: 2;
+      grid-column: 2;
+    }
+    .play {
+      grid-row: 2;
+      grid-column: 1;
+    }
+  }
+  .play {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0 1.1rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--paper);
+    font: 700 0.95rem var(--sans);
+    cursor: pointer;
+  }
+  .play svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+  .play .i-pause,
+  .play[aria-pressed="true"] .i-play {
+    display: none;
+  }
+  .play[aria-pressed="true"] .i-pause {
+    display: inline;
+  }
+
+  /* One lane per event; x is months since the start. */
+  .gantt {
+    --lane: 14px;
+    --gap: 4px;
+    position: relative;
+    height: calc(13 * (var(--lane) + var(--gap)) + 8px);
+    border-bottom: 2px solid var(--ink);
+  }
+  .gantt:has(input:focus-visible) {
+    outline: 3px solid var(--ink);
+    outline-offset: 6px;
+    border-radius: 4px;
+  }
+  .mark {
+    position: absolute;
+    top: calc(var(--row) * (var(--lane) + var(--gap)));
+    left: calc(var(--a) / var(--total) * 100%);
+    width: max(calc((var(--b) - var(--a) + 1) / var(--total) * 100% - 2px), 6px);
+    height: var(--lane);
+    border-radius: 4px;
+    opacity: 0.22;
+    transition: opacity 0.15s;
+  }
+  .mark.is-on {
+    opacity: 1;
+  }
+  .mark--point {
+    width: var(--lane);
+    margin-left: calc(var(--lane) / -2 + 100% / var(--total) / 2);
+    border-radius: 50%;
+  }
+  .mark--study { background: var(--study); }
+  .mark--work { background: var(--work); }
+  .mark--app { background: var(--app); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .mark--life { background: var(--life); }
+  .playhead {
+    position: absolute;
+    top: -6px;
+    bottom: -6px;
+    left: calc((var(--pos) + 0.5) / var(--total) * 100%);
+    width: 2px;
+    margin-left: -1px;
+    background: var(--ink);
+    pointer-events: none;
+  }
+  .playhead::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    translate: -50% 0;
+    background: var(--ink);
+    box-shadow: 0 0 0 3px var(--paper);
+  }
+  /* The whole chart is the slider: drag anywhere on it. */
+  .gantt input {
+    position: absolute;
+    inset: -8px 0;
+    width: 100%;
+    height: calc(100% + 16px);
+    margin: 0;
+    opacity: 0;
+    cursor: ew-resize;
+    touch-action: pan-y;
+  }
+  .years {
+    position: relative;
+    height: 1.6rem;
+    margin-top: 0.6rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--muted);
+  }
+  .years span {
+    position: absolute;
+    left: calc(var(--a) / var(--total) * 100%);
+  }
+  @media (max-width: 520px) {
+    .years span:nth-child(even) { visibility: hidden; }
+  }
+
+  .now-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+    padding: 0;
+    list-style: none;
+  }
+  .item {
+    display: grid;
+    gap: 0.2rem;
+    padding: 0.8rem 1rem 0.85rem;
+    border: 2px solid var(--ink);
+    border-left-width: 10px;
+    border-radius: var(--radius);
+    background: #fff;
+  }
+  .item[hidden] { display: none; }
+  .item--study { border-left-color: var(--study); }
+  .item--work { border-left-color: var(--work); }
+  .item--app { border-left-color: var(--sun); background: #FFFBEA; }
+  .item--life { border-left-color: var(--life); }
+  .item b {
+    line-height: 1.2;
+  }
+  .item span {
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+</style>
+
+<script>
+  import { speed } from "../lib/speed";
+
+  const gantt = document.querySelector<HTMLElement>(".gantt")!;
+  const input = gantt.querySelector<HTMLInputElement>("input")!;
+  const marks = gantt.querySelectorAll<HTMLElement>(".mark");
+  const items = document.querySelectorAll<HTMLElement>(".now-list .item");
+  const when = document.querySelector<HTMLElement>(".tl .when")!;
+  const count = document.querySelector<HTMLElement>(".tl .count")!;
+  const play = document.querySelector<HTMLButtonElement>(".tl .play")!;
+  const one = document.querySelector<HTMLTemplateElement>("[data-count-one]")!.innerHTML;
+  const many = document.querySelector<HTMLTemplateElement>("[data-count-many]")!.innerHTML;
+  const [fy, fm] = gantt.dataset.first!.split("-").map(Number);
+  const fmt = new Intl.DateTimeFormat(gantt.dataset.locale, { month: "long", year: "numeric", timeZone: "UTC" });
+  const last = Number(input.max);
+
+  function show(i: number) {
+    gantt.style.setProperty("--pos", String(i));
+    const label = fmt.format(new Date(Date.UTC(fy, fm - 1 + i, 1)));
+    when.textContent = label.charAt(0).toUpperCase() + label.slice(1);
+    input.setAttribute("aria-valuetext", label);
+    let n = 0;
+    items.forEach((li) => {
+      const on = +li.dataset.a! <= i && i <= +li.dataset.b!;
+      li.hidden = !on;
+      marks[+li.dataset.i!].classList.toggle("is-on", on);
+      if (on) n++;
+    });
+    count.textContent = n === 1 ? one : many.replace("{n}", String(n));
+  }
+
+  input.addEventListener("input", () => {
+    stop();
+    show(+input.value);
+  });
+
+  // Play runs from the first month to today at the pace the speed button sets.
+  let timer = 0;
+  function stop() {
+    clearTimeout(timer);
+    play.setAttribute("aria-pressed", "false");
+    play.querySelector("span")!.textContent = play.dataset.play!;
+  }
+  function step() {
+    const i = +input.value + 1;
+    if (i > last) return stop();
+    input.value = String(i);
+    show(i);
+    timer = window.setTimeout(step, 110 / speed());
+  }
+  play.addEventListener("click", () => {
+    if (play.getAttribute("aria-pressed") === "true") return stop();
+    if (+input.value >= last) {
+      input.value = "0";
+      show(0);
+    }
+    play.setAttribute("aria-pressed", "true");
+    play.querySelector("span")!.textContent = play.dataset.pause!;
+    timer = window.setTimeout(step, 110 / speed());
+  });
+
+  show(last);
+</script>

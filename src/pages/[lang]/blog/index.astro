@@ -3,7 +3,7 @@ import BlogIndex from "../../../components/BlogIndex.astro";
 import { ROOT_LANG, type Lang } from "../../../i18n/translations";
 import { blogLangs } from "../../../lib/blog";
 
-// /<lang>/blog/ for the other two languages, only for those with posts.
+// /<lang>/blog/ for English and Catalan, only for those with posts.
 export async function getStaticPaths() {
   return (await blogLangs()).filter((l) => l !== ROOT_LANG).map((lang) => ({ params: { lang } }));
 }

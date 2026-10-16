@@ -1,0 +1,91 @@
+---
+import { translations, type Lang } from "../i18n/translations";
+import { EMAIL } from "../config";
+
+interface Props {
+  lang: Lang;
+}
+
+const t = translations[Astro.props.lang];
+const links = [
+  { label: "GitHub", href: "https://github.com/vickyg-cmd" },
+  { label: "LinkedIn", href: "https://linkedin.com/in/victoria-gonzalez-malave" },
+  { label: "Bluesky", href: "https://bsky.app/profile/vickythedev.bsky.social" },
+];
+---
+
+<footer class="contact section" id="contacto" aria-labelledby="contact-title">
+  <div class="wrap">
+    <h2 id="contact-title">{t.contact_title}</h2>
+    <p class="contact__body">{t.contact_body}</p>
+    <p class="mail"><a href={`mailto:${EMAIL}`}>{EMAIL}</a></p>
+    <button type="button" class="btn" data-copy={EMAIL} data-copied={t.copied} data-selected={t.selected}>{t.copy_email}</button>
+    <p class="status" role="status"></p>
+    <ul class="links">{links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
+  </div>
+</footer>
+
+<style>
+  .contact {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  h2 {
+    color: var(--sun);
+  }
+  .contact__body {
+    max-width: 40ch;
+    font-size: 1.2rem;
+  }
+  .mail {
+    margin: 1.25rem 0;
+    font-weight: 800;
+    font-size: clamp(1.3rem, 5vw, 3.2rem);
+    letter-spacing: -0.02em;
+    overflow-wrap: anywhere;
+  }
+  .mail a {
+    text-decoration-thickness: 3px;
+    text-underline-offset: 0.15em;
+  }
+  .btn {
+    background: var(--sun);
+    color: var(--ink);
+  }
+  .status {
+    min-height: 1.5em;
+    margin-top: 0.75rem;
+    color: var(--sun);
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.5rem;
+    margin-top: 1.5rem;
+    padding: 0;
+    list-style: none;
+    font-weight: 700;
+  }
+  .links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  :focus-visible {
+    outline-color: var(--sun);
+  }
+</style>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>("[data-copy]")!;
+  const status = btn.nextElementSibling as HTMLElement;
+  btn.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(btn.dataset.copy!);
+      status.textContent = btn.dataset.copied!;
+    } catch {
+      getSelection()?.selectAllChildren(document.querySelector(".mail")!);
+      status.textContent = btn.dataset.selected!;
+    }
+  });
+</script>

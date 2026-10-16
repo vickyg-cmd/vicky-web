@@ -1,0 +1,53 @@
+---
+import { translations, type Lang } from "../i18n/translations";
+
+interface Props {
+  lang: Lang;
+}
+
+const t = translations[Astro.props.lang];
+---
+
+<section class="off section" aria-labelledby="off-title">
+  <div class="wrap off__in">
+    <img src="/img/vicky.webp" alt={t.photo_alt} width="650" height="720" loading="lazy" />
+    <div>
+      <p class="eyebrow">{t.off_eyebrow}</p>
+      <h2 id="off-title">{t.off_title}</h2>
+      <p class="placeholder">{t.off_family}</p>
+      <ul class="chips">{t.off_sports.map((s) => <li>{s}</li>)}</ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .off {
+    background: var(--butter);
+  }
+  .off__in {
+    display: grid;
+    gap: clamp(1.5rem, 5vw, 4rem);
+    align-items: center;
+  }
+  @media (min-width: 760px) {
+    .off__in {
+      grid-template-columns: 300px 1fr;
+    }
+  }
+  img {
+    width: 100%;
+    max-width: 340px;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: 50% 30%;
+    border: 4px solid var(--ink);
+    border-radius: var(--radius);
+    rotate: -2deg;
+  }
+  .chips {
+    margin-top: 1.25rem;
+  }
+  .chips li {
+    color: var(--butter);
+  }
+</style>

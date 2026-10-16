@@ -3,7 +3,7 @@ import BlogPost from "../../../components/BlogPost.astro";
 import { langs, ROOT_LANG } from "../../../i18n/translations";
 import { getPosts, postSlug } from "../../../lib/blog";
 
-// Posts in the other two languages live at /<lang>/blog/<slug>/.
+// Posts in English and Catalan live at /<lang>/blog/<slug>/.
 export async function getStaticPaths() {
   const paths = await Promise.all(
     langs

@@ -1,0 +1,158 @@
+---
+/** Turns a phone over to show its back: a camera bump and notes on how the
+ *  app is made. Front goes in the default slot, the notes in slot="back". */
+import { translations, type Lang } from "../../i18n/translations";
+
+interface Props {
+  lang: Lang;
+  /** The back panel's color and the text on it. */
+  color: string;
+  ink: string;
+}
+
+const { lang, color, ink } = Astro.props;
+const t = translations[lang];
+---
+
+<div class="flip" data-flip>
+  <div class="flip__card">
+    <div class="flip__face flip__front"><slot /></div>
+    <div class="flip__face flip__back" style={`--back: ${color}; --back-ink: ${ink}`} inert>
+      <div class="camera" aria-hidden="true"><i></i><i></i><i></i></div>
+      <p class="back__title">{t.back_title}</p>
+      <div class="back__body"><slot name="back" /></div>
+    </div>
+  </div>
+  <button type="button" class="flip__btn" aria-pressed="false" data-open={t.flip_open} data-close={t.flip_close}>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4a8 8 0 0 1 7.4 5H17l3 4 3-4h-1.5A10 10 0 0 0 2.3 9.6l1.9.6A8 8 0 0 1 12 4m0 16a8 8 0 0 1-7.4-5H7l-3-4-3 4h1.5a10 10 0 0 0 19.2-.6l-1.9-.6A8 8 0 0 1 12 20" /></svg>
+    <span>{t.flip_open}</span>
+  </button>
+</div>
+
+<style>
+  .flip {
+    display: grid;
+    justify-items: center;
+    gap: 1rem;
+    perspective: 1600px;
+  }
+  .flip__card {
+    display: grid;
+    transform-style: preserve-3d;
+    transition: transform calc(0.6s / var(--speed)) cubic-bezier(0.3, 0.8, 0.2, 1);
+  }
+  .flip.is-flipped .flip__card {
+    transform: rotateY(180deg);
+  }
+  .flip__face {
+    grid-area: 1 / 1;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .flip__back {
+    transform: rotateY(180deg);
+    position: relative;
+    width: 292px;
+    height: 620px;
+    padding: 150px 26px 26px;
+    overflow: hidden;
+    border-radius: 48px;
+    background: var(--back);
+    color: var(--back-ink);
+    box-shadow:
+      inset 0 0 0 4px rgb(0 0 0 / 0.18),
+      0 30px 50px -20px rgb(17 16 20 / 0.55);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .flip__card {
+      transition: none;
+    }
+  }
+
+  /* The camera bump, top left like an iPhone's. */
+  .camera {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 104px;
+    height: 104px;
+    border-radius: 30px;
+    background: rgb(0 0 0 / 0.16);
+    box-shadow: inset 0 0 0 2px rgb(255 255 255 / 0.18);
+  }
+  .camera i {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, #2b3440 0 28%, #0c0f13 30% 62%, #3a3f46 64%);
+    box-shadow: 0 0 0 3px rgb(0 0 0 / 0.25);
+  }
+  .camera i:nth-child(1) { top: 10px; left: 10px; }
+  .camera i:nth-child(2) { top: 54px; left: 10px; }
+  .camera i:nth-child(3) { top: 32px; left: 56px; }
+
+  .back__title {
+    margin-bottom: 0.75rem;
+    font-weight: 800;
+    font-size: 1.6rem;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    font-stretch: 75%;
+  }
+  .back__body {
+    display: grid;
+    gap: 0.6rem;
+    font-size: 0.86rem;
+    line-height: 1.35;
+  }
+  .back__body :global(ul) {
+    display: grid;
+    gap: 0.55rem;
+    padding: 0;
+    list-style: none;
+  }
+  .back__body :global(li) {
+    padding-left: 0.9rem;
+    border-left: 3px solid currentColor;
+  }
+
+  .flip__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0 1rem;
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink);
+    font: 700 0.95rem var(--sans);
+    cursor: pointer;
+  }
+  .flip__btn svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    transition: rotate calc(0.6s / var(--speed));
+  }
+  .flip.is-flipped .flip__btn svg {
+    rotate: 180deg;
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-flip]").forEach((flip) => {
+    const btn = flip.querySelector<HTMLButtonElement>(".flip__btn")!;
+    const front = flip.querySelector<HTMLElement>(".flip__front")!;
+    const back = flip.querySelector<HTMLElement>(".flip__back")!;
+    btn.addEventListener("click", () => {
+      const flipped = flip.classList.toggle("is-flipped");
+      btn.setAttribute("aria-pressed", String(flipped));
+      btn.querySelector("span")!.textContent = flipped ? btn.dataset.close! : btn.dataset.open!;
+      // Only the face showing can be reached by keyboard or screen reader.
+      front.inert = flipped;
+      back.inert = !flipped;
+    });
+  });
+</script>

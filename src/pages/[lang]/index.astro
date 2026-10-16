@@ -2,7 +2,7 @@
 import HomePage from "../../components/HomePage.astro";
 import { langs, ROOT_LANG, type Lang } from "../../i18n/translations";
 
-// The root language is served at "/"; the other two get /gl/, /en/ and so on.
+// Spanish is served at "/", English at /en/ and Catalan at /ca/.
 export function getStaticPaths() {
   return langs.filter((l) => l !== ROOT_LANG).map((lang) => ({ params: { lang } }));
 }

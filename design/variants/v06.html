@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Victoria González Malavé · A toda velocidad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&display=swap" rel="stylesheet">
+<style>
+  /* Shape: she talks fast, so the page talks fast. A kinetic intro with a voice-note speed pill (1x, 1.5x, 2x),
+     then a bright, tidy page. One family, pushed hard on width and weight. Colors flash per line, then settle on lilac. */
+  :root {
+    --brand: #FF5A36;   /* tomato */
+    --lilac: #C7B6F2;
+    --sun: #EAD94C;
+    --sky: #82BCD3;
+    --paper: #FBFAF7;
+    --ink: #111014;
+    --muted: #46424D;
+    --serif: "Bricolage Grotesque", system-ui, sans-serif;
+    --sans: "Bricolage Grotesque", system-ui, sans-serif;
+    --mono: ui-monospace, monospace;
+    --radius: 14px;
+    --gutter: clamp(16px, 4vw, 56px);
+    --speed: 1;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 18px/1.5 var(--sans); font-variation-settings: "opsz" 14; overflow-x: clip; }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+
+  /* Intro stage */
+  .stage { position: relative; min-height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; background: var(--lilac); transition: background calc(.12s / var(--speed)); }
+  .top { display: flex; justify-content: space-between; align-items: center; padding: 14px var(--gutter); }
+  .top b { font-weight: 700; font-size: 1rem; }
+  @media (max-width: 480px) { .top b { font-size: 0; } .top b::before { content: "Victoria"; font-size: 1.05rem; } }
+  .pill { display: flex; gap: 4px; background: rgba(17,16,20,.1); border-radius: 999px; padding: 4px; }
+  .pill button { font: 700 .9rem var(--sans); min-width: 48px; min-height: 40px; border: 0; border-radius: 999px; background: transparent; color: var(--ink); cursor: pointer; font-variant-numeric: tabular-nums; }
+  .pill button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  .lang { font: 700 .9rem var(--sans); min-width: 52px; min-height: 44px; border-radius: 999px; border: 2px solid var(--ink); background: transparent; color: var(--ink); cursor: pointer; }
+  .tools { display: flex; gap: 8px; align-items: center; }
+
+  .say { display: grid; place-items: center; padding: 0 var(--gutter); text-align: center; }
+  .say .word { font-weight: 800; font-size: clamp(4.6rem, 21vw, 12rem); line-height: .9; letter-spacing: -.035em; margin: 0; text-wrap: balance; }
+  .say .word.pop { animation: pop calc(.18s / var(--speed)) cubic-bezier(.2, 1.6, .4, 1); }
+  @keyframes pop { from { transform: scale(.8) rotate(-3deg); opacity: 0; } }
+
+  .settled { display: none; align-content: end; padding: 0 var(--gutter) 2rem; }
+  .settled h1 { margin: 0; font-weight: 800; font-size: clamp(3.2rem, 11vw, 9rem); line-height: .88; letter-spacing: -.04em; }
+  .settled h1 span { display: inline-block; padding: 0 .08em; border-radius: .12em; margin: .03em 0; }
+  .settled h1 .a { background: var(--ink); color: var(--lilac); font-variation-settings: "wdth" 75; }
+  .settled h1 .b { background: var(--sun); rotate: -2deg; }
+  .settled h1 .c { background: var(--brand); color: var(--ink); font-variation-settings: "wdth" 75; rotate: 1.5deg; }
+  .settled p { max-width: 38ch; font-size: clamp(1.1rem, 2vw, 1.35rem); margin: 1.25rem 0 1.5rem; }
+  .acts { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
+  .btn { display: inline-flex; align-items: center; gap: .6rem; min-height: 54px; padding: 0 1.3rem; border-radius: var(--radius); background: var(--ink); color: var(--paper); text-decoration: none; font: 700 1.05rem var(--sans); border: 0; cursor: pointer; }
+  .btn.ghost { background: transparent; color: var(--ink); border: 2px solid var(--ink); }
+  .stage.done .say { display: none; }
+  .stage.done .settled { display: grid; }
+  .bottom { padding: 0 var(--gutter) 16px; display: flex; gap: 6px; }
+  .bottom i { flex: 1; height: 4px; background: rgba(17,16,20,.15); border-radius: 4px; }
+  .bottom i.on { background: var(--ink); }
+  .stage.done .bottom { display: none; }
+
+  /* Sections */
+  section { padding: clamp(3.5rem, 9vw, 7rem) var(--gutter); }
+  .eyebrow { font-weight: 700; font-size: 1rem; margin: 0 0 .5rem; }
+  h2 { font-weight: 800; font-size: clamp(2.4rem, 7vw, 5rem); line-height: .92; letter-spacing: -.03em; margin: 0 0 1.25rem; text-wrap: balance; }
+
+  .tt { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(2rem, 6vw, 5rem); align-items: center; }
+  @media (max-width: 820px) { .tt { grid-template-columns: 1fr; } }
+  .tt .name { font-weight: 800; font-size: clamp(3rem, 11vw, 8rem); letter-spacing: -.05em; line-height: .85; margin: 0 0 1.5rem; font-variation-settings: "wdth" 75; }
+  .tt .name b { color: #C91F43; } .tt .name span { color: #0B6A4C; }
+  .tt p { max-width: 42ch; }
+  .phones { display: flex; justify-content: center; gap: 1rem; }
+  .phones img { width: min(46%, 240px); border-radius: 28px; border: 4px solid var(--ink); box-shadow: 10px 10px 0 var(--sky); }
+  .phones img:last-child { margin-top: 3rem; box-shadow: 10px 10px 0 var(--sun); }
+  .facts { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0 1.5rem; padding: 0; list-style: none; }
+  .facts li { font-weight: 700; font-size: .95rem; padding: .35rem .8rem; background: var(--ink); color: var(--paper); border-radius: 999px; }
+
+  .pk { background: var(--brand); }
+  .pk-in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(2rem, 6vw, 5rem); align-items: end; }
+  @media (max-width: 820px) { .pk-in { grid-template-columns: 1fr; } }
+  .lot { display: grid; grid-template-columns: repeat(15, 1fr); gap: 5px; }
+  .lot i { aspect-ratio: 1 / 1.7; border-radius: 4px; background: rgba(17,16,20,.14); transition: background .1s; }
+  .lot i.f { background: var(--ink); }
+  .counter { font-weight: 800; font-size: clamp(3.5rem, 10vw, 7rem); line-height: .9; letter-spacing: -.04em; margin: 1rem 0 .25rem; font-variant-numeric: tabular-nums; }
+  .small { font-size: .95rem; color: var(--ink); opacity: .85; }
+
+  .ticker { background: var(--ink); color: var(--paper); overflow: hidden; padding: 1.1rem 0; }
+  .ticker .track { display: flex; width: max-content; gap: 2.5rem; font-weight: 800; font-size: clamp(1.6rem, 4vw, 2.6rem); letter-spacing: -.02em; animation: run calc(28s / var(--speed)) linear infinite; }
+  .ticker .track span:nth-child(3n+1) { color: var(--sun); } .ticker .track span:nth-child(3n+2) { color: var(--lilac); }
+  .ticker:hover .track { animation-play-state: paused; }
+  @keyframes run { to { transform: translateX(-50%); } }
+
+  .now ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+  .now li { border: 3px solid var(--ink); border-radius: var(--radius); padding: 1.1rem 1.2rem; display: grid; gap: .35rem; }
+  .now li:nth-child(1) { background: var(--sun); } .now li:nth-child(2) { background: var(--sky); }
+  .now b { font-size: 1.2rem; line-height: 1.2; }
+  .now span { font-size: .95rem; color: var(--muted); }
+
+  .off { background: var(--lilac); }
+  .off-in { display: grid; grid-template-columns: 280px 1fr; gap: clamp(1.5rem, 5vw, 4rem); align-items: center; }
+  @media (max-width: 760px) { .off-in { grid-template-columns: 1fr; } }
+  .off img { width: 100%; aspect-ratio: 4/5; object-fit: cover; object-position: 50% 25%; border-radius: var(--radius); border: 4px solid var(--ink); rotate: -2deg; }
+  .ph { border: 2px dashed var(--ink); border-radius: var(--radius); padding: .8rem 1rem; max-width: 46ch; }
+  .off ul { padding: 0; margin: 1rem 0 0; list-style: none; display: flex; flex-wrap: wrap; gap: .5rem; }
+  .off ul li { background: var(--ink); color: var(--lilac); font-weight: 700; padding: .4rem .85rem; border-radius: 999px; }
+
+  footer { background: var(--ink); color: var(--paper); padding: clamp(3.5rem, 9vw, 7rem) var(--gutter); }
+  footer h2 { color: var(--sun); }
+  .mail { font-weight: 800; font-size: clamp(1.3rem, 5vw, 3.2rem); letter-spacing: -.02em; overflow-wrap: anywhere; user-select: all; margin: 0 0 1.25rem; }
+  footer .btn { background: var(--sun); color: var(--ink); }
+  footer .links { display: flex; flex-wrap: wrap; gap: .25rem 1.5rem; margin-top: 1.5rem; font-weight: 700; }
+  footer .links a { padding: .6rem 0; }
+  .status { min-height: 1.4em; color: var(--sun); margin: .75rem 0 0; }
+  @media (prefers-reduced-motion: reduce) { .ticker .track { animation: none; flex-wrap: wrap; width: auto; padding: 0 var(--gutter); } .say .word.pop { animation: none; } }
+</style>
+</head>
+<body>
+<header class="stage" id="stage">
+  <div class="top">
+    <b>Victoria González Malavé</b>
+    <div class="tools">
+      <div class="pill" role="group" aria-label="Velocidad">
+        <button type="button" data-s="1" aria-pressed="true">1×</button>
+        <button type="button" data-s="1.5" aria-pressed="false">1,5×</button>
+        <button type="button" data-s="2" aria-pressed="false">2×</button>
+      </div>
+      <button type="button" class="lang" data-lang-toggle aria-label="Read in English">EN</button>
+    </div>
+  </div>
+  <div class="say" aria-hidden="true"><p class="word" id="word"></p></div>
+  <div class="settled">
+    <h1><span class="a" data-en="Hi!">¡Hola!</span> <span data-en="I'm Victoria,">Soy Victoria,</span> <span class="b" data-en="I talk fast">hablo rápido</span> <span data-en="and">y</span> <span class="c" data-en="make apps.">hago apps.</span></h1>
+    <p data-en="iOS and Android developer in Barcelona. My first app is already on the App Store, the second is on the way, and right now I'm a junior software architect at NTT DATA.">Desarrolladora iOS y Android en Barcelona. Mi primera app ya está en el App Store, la segunda va de camino y ahora mismo soy arquitecta de software junior en NTT DATA.</p>
+    <div class="acts">
+      <a class="btn" href="#termotrendy" data-en="See my app">Ver mi app</a>
+      <button type="button" class="btn ghost" id="again" data-en="Say it again">Otra vez</button>
+    </div>
+  </div>
+  <div class="bottom" aria-hidden="true"></div>
+</header>
+
+<section id="termotrendy">
+  <div class="tt">
+    <div>
+      <p class="eyebrow" data-en="App number one">La app número uno</p>
+      <p class="name"><b>termo</b><span>trendy</span></p>
+      <p data-en="You add your clothes. It checks where you are and the weather. It puts the outfit together. Fast, like me. Made solo in SwiftUI.">Subes tu ropa. Mira dónde estás y qué tiempo hace. Te arma el outfit. Rápida, como yo. Hecha en solitario con SwiftUI.</p>
+      <ul class="facts"><li data-en="App Store · Jan 2026">App Store · ene. 2026</li><li data-en="Free">Gratis</li><li>iOS 17.5+</li></ul>
+      <a class="btn" href="https://apps.apple.com/es/app/termotrendy/id6757545419" data-en="Download TermoTrendy">Descargar TermoTrendy</a>
+    </div>
+    <div class="phones">
+      <img src="img/tt-home.jpg" alt="TermoTrendy: Crear outfit y Añadir ropa" width="300" height="650">
+      <img src="img/tt-weather.jpg" alt="TermoTrendy: Barcelona, 12 grados" width="300" height="650">
+    </div>
+  </div>
+</section>
+
+<section class="pk">
+  <div class="pk-in">
+    <div>
+      <p class="eyebrow" data-en="App number two · on hold">La app número dos · en pausa</p>
+      <h2>PK UPC</h2>
+      <p data-en="The lot at the UPC Terrassa campus fills up every class day. PK UPC tells you if there's a space before you get in the car.">El párquing del campus UPC de Terrassa se llena todos los días de clase. PK UPC te dice si hay sitio antes de subirte al coche.</p>
+    </div>
+    <div>
+      <div class="lot" id="lot" aria-hidden="true"></div>
+      <p class="counter"><span id="cnt">0</span>/75</p>
+      <p class="small" data-en="Spaces taken, in a demo of a normal morning. At least 150 drivers a day want one, by my count.">Plazas ocupadas, en una demo de una mañana normal. Al menos 150 conductores al día quieren una, según mis cuentas.</p>
+    </div>
+  </div>
+</section>
+
+<div class="ticker" aria-label="Lenguajes y herramientas: Swift, SwiftUI, FlutterFlow, C, C++, Python, Godot 4, Xcode, JavaScript">
+  <div class="track" aria-hidden="true"></div>
+</div>
+
+<section class="now">
+  <p class="eyebrow" data-en="Right now">Ahora mismo</p>
+  <h2 data-en="A lot on, all good.">Mucho lío, todo bueno.</h2>
+  <ul>
+    <li><b data-en="Junior software architect, NTT DATA">Arquitecta de software junior, NTT DATA</b><span data-en="Since October 2026">Desde octubre de 2026</span></li>
+    <li><b data-en="FlutterFlow developer and tech lead, two.zero">Desarrolladora FlutterFlow y tech lead, two.zero</b><span data-en="Since September 2025">Desde septiembre de 2025</span></li>
+    <li><b data-en="Bachelor + Master, Epitech">Bachelor + Máster, Epitech</b><span data-en="Software engineering, through 2027. TA there from March to June 2026.">Ingeniería de software, hasta 2027. Asistente docente de marzo a junio de 2026.</span></li>
+  </ul>
+</section>
+
+<section class="off">
+  <div class="off-in">
+    <img src="img/vicky.jpg" alt="Victoria González Malavé" width="720" height="797">
+    <div>
+      <p class="eyebrow" data-en="Off the screen">Fuera de la pantalla</p>
+      <h2 data-en="Family, and the mountains.">La familia, y la montaña.</h2>
+      <p class="ph" data-en="[Victoria writes two lines here about her family]">[Aquí Victoria escribe dos líneas sobre su familia]</p>
+      <ul><li data-en="Climbing 6c">Escalada 6c</li><li data-en="Via ferrata K5">Ferratas K5</li><li data-en="Canyoning">Barranquismo</li><li>Rafting</li><li>Snowboard</li></ul>
+    </div>
+  </div>
+</section>
+
+<footer id="contacto">
+  <h2 data-en="Talk to me!">¡Háblame!</h2>
+  <p class="mail" id="mail">vickygonzalezmalave@gmail.com</p>
+  <button type="button" class="btn" id="copy" data-en="Copy email">Copiar email</button>
+  <p class="status" role="status" id="copied"></p>
+  <div class="links"><a href="https://github.com/vickyg-cmd">GitHub</a><a href="https://linkedin.com/in/victoria-gonzalez-malave">LinkedIn</a><a href="https://bsky.app/profile/vickythedev.bsky.social">Bluesky</a></div>
+</footer>
+
+<script>
+  let lang = "es";
+  const LINES = {
+    es: ["¡Hola!", "Hi!", "Soy Victoria.", "Hablo rápido.", "Programo igual.", "Hago apps", "para iPhone", "y Android.", "La primera", "ya está en", "el App Store.", "¿Te la enseño?"],
+    en: ["Hi!", "¡Hola!", "I'm Victoria.", "I talk fast.", "I code the same way.", "I make apps", "for iPhone", "and Android.", "The first one", "is already on", "the App Store.", "Want to see it?"]
+  };
+  const BG = ["#C7B6F2", "#EAD94C", "#FF5A36", "#111014", "#82BCD3", "#FBFAF7"];
+  const FG = ["#111014", "#111014", "#111014", "#EAD94C", "#111014", "#111014"];
+  const stage = document.getElementById("stage"), word = document.getElementById("word"), dots = stage.querySelector(".bottom");
+  LINES.es.forEach(() => dots.append(document.createElement("i")));
+  let speed = 1, timer = null;
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function settle() { clearTimeout(timer); stage.classList.add("done"); stage.style.background = ""; stage.style.color = ""; }
+  function play() {
+    if (reduce) return settle();
+    stage.classList.remove("done");
+    let i = 0;
+    const tick = () => {
+      const lines = LINES[lang];
+      if (i >= lines.length) return settle();
+      const c = i % BG.length;
+      stage.style.background = BG[c]; stage.style.color = FG[c];
+      word.textContent = lines[i];
+      word.style.fontVariationSettings = `"wdth" ${i % 2 ? 75 : 100}`;
+      word.classList.remove("pop"); void word.offsetWidth; word.classList.add("pop");
+      [...dots.children].forEach((d, k) => d.classList.toggle("on", k <= i));
+      i++;
+      timer = setTimeout(tick, (lines[i - 1].length > 9 ? 560 : 420) / speed);
+    };
+    tick();
+  }
+  play();
+  word.parentElement.addEventListener("click", settle);
+  document.getElementById("again").addEventListener("click", play);
+  document.querySelectorAll(".pill button").forEach(b => b.addEventListener("click", () => {
+    speed = +b.dataset.s;
+    document.documentElement.style.setProperty("--speed", speed);
+    document.querySelectorAll(".pill button").forEach(o => o.setAttribute("aria-pressed", String(o === b)));
+  }));
+
+  // Ticker, doubled for a seamless loop
+  const stack = ["Swift", "SwiftUI", "FlutterFlow", "C", "C++", "Python", "Godot 4", "Xcode", "JavaScript"];
+  document.querySelector(".track").innerHTML = [...stack, ...stack].map(s => `<span>${s}</span>`).join("");
+
+  // Lot fills fast when it scrolls into view: a demo, not live data
+  const lot = document.getElementById("lot"), cnt = document.getElementById("cnt");
+  for (let i = 0; i < 75; i++) lot.append(document.createElement("i"));
+  const order = [...lot.children].map((_, i) => i).sort(() => Math.random() - .5).slice(0, 71);
+  new IntersectionObserver(([e], io) => {
+    if (!e.isIntersecting) return; io.disconnect();
+    if (reduce) { order.forEach(k => lot.children[k].classList.add("f")); cnt.textContent = order.length; return; }
+    order.forEach((k, n) => setTimeout(() => { lot.children[k].classList.add("f"); cnt.textContent = n + 1; }, n * 22 / speed));
+  }, { threshold: .4 }).observe(lot);
+
+  document.getElementById("copy").onclick = async () => {
+    const out = document.getElementById("copied");
+    try { await navigator.clipboard.writeText("vickygonzalezmalave@gmail.com"); out.textContent = lang === "en" ? "Copied. Talk soon!" : "Copiado. ¡Hablamos!"; }
+    catch { getSelection().selectAllChildren(document.getElementById("mail")); out.textContent = lang === "en" ? "Selected. Copy it with your keyboard." : "Seleccionado. Cópialo con el teclado."; }
+  };
+
+  const tog = document.querySelector("[data-lang-toggle]");
+  tog.addEventListener("click", () => {
+    const toEn = lang === "es"; lang = toEn ? "en" : "es";
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-en]").forEach(el => {
+      if (el.dataset.es === undefined) el.dataset.es = el.innerHTML;
+      el.innerHTML = toEn ? el.dataset.en : el.dataset.es;
+    });
+    tog.textContent = toEn ? "ES" : "EN";
+    tog.setAttribute("aria-label", toEn ? "Leer en español" : "Read in English");
+    play();
+  });
+</script>
+</body>
+</html>

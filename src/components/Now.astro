@@ -1,0 +1,49 @@
+---
+import { translations, type Lang } from "../i18n/translations";
+
+interface Props {
+  lang: Lang;
+}
+
+const t = translations[Astro.props.lang];
+---
+
+<section class="now section" id="ahora" aria-labelledby="now-title">
+  <div class="wrap">
+    <h2 id="now-title">{t.now_title}</h2>
+    <ul class="cards">
+      {t.now.map((n) => <li><b>{n.title}</b><span>{n.when}</span></li>)}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .now {
+    padding-bottom: clamp(2.5rem, 6vw, 4rem);
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1rem;
+    padding: 0;
+    list-style: none;
+  }
+  li {
+    display: grid;
+    align-content: start;
+    gap: 0.3rem;
+    padding: 1.1rem 1.2rem;
+    border: 3px solid var(--ink);
+    border-radius: var(--radius);
+  }
+  li:nth-child(1) { background: var(--sun); }
+  li:nth-child(2) { background: var(--green); }
+  li:nth-child(3) { background: var(--butter); }
+  b {
+    font-size: 1.2rem;
+    line-height: 1.2;
+  }
+  span {
+    font-size: 0.95rem;
+  }
+</style>

@@ -26,49 +26,58 @@ const what = process.argv[2] ?? "all";
 
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
+const DOMAIN = "vickygonzalezmalave.netlify.app"; // placeholder until Victoria picks a domain
+
 const shell = (body) => `<!doctype html>
 <html><head><meta charset="utf-8">
+<link rel="stylesheet" href="${file("node_modules/@fontsource-variable/bricolage-grotesque/standard.css")}">
 <link rel="stylesheet" href="${file("src/styles/global.css")}">
 <style>
   html, body { margin: 0; }
   .og {
     width: 100vw; height: 100vh; box-sizing: border-box;
-    display: flex; flex-direction: column; justify-content: center; gap: 28px;
-    padding: 0 88px; background: var(--brand); color: var(--paper);
+    display: flex; flex-direction: column; justify-content: center; gap: 32px;
+    padding: 0 80px; background: var(--green); color: var(--ink); font-family: var(--sans);
   }
-  .og h1 { font-family: var(--serif); font-weight: 400; font-size: 64px; line-height: 1.05; max-width: 900px; margin: 0; }
-  .og p { font-size: 26px; font-weight: 700; margin: 0; }
-  .og .eyebrow { font-size: 22px; font-weight: 400; opacity: 0.8; }
-  .og--square h1 { font-size: 96px; }
-  .og--square .lede, .og--story .lede { font-size: 40px; font-weight: 400; line-height: 1.3; max-width: 860px; }
+  .og h1 { font-weight: 800; font-size: 104px; line-height: 0.9; letter-spacing: -0.04em; margin: 0; }
+  .og h1 span { display: inline-block; padding: 0 0.08em; margin: 0.03em 0; border-radius: 0.12em; }
+  .og .a { background: var(--ink); color: var(--green); font-stretch: 75%; }
+  .og .b { background: var(--sun); rotate: -2deg; }
+  .og .c { background: var(--red); font-stretch: 75%; rotate: 1.5deg; }
+  .og p { font-size: 28px; font-weight: 700; margin: 0; }
+  .og .eyebrow { font-size: 24px; }
+  .og .lede { font-size: 40px; font-weight: 500; line-height: 1.25; max-width: 860px; }
+  .og--post h1 { font-size: 80px; }
   /* Stories: Instagram covers roughly the top and bottom 250px with its own
      controls, so keep everything inside the middle. */
-  .og--story { padding: 260px 96px; justify-content: space-between; }
-  .og--story h1 { font-size: 120px; }
+  .og--story { padding: 260px 80px; justify-content: space-between; }
+  .og--story h1 { font-size: 132px; }
 </style></head>
 <body>${body}</body></html>`;
 
+const headline = (t) => `<h1>${t.hero_parts.map((p) => `<span${p.tone ? ` class="${p.tone}"` : ""}>${esc(p.text)}</span>`).join(" ")}</h1>`;
+
 const siteCard = (t) => shell(`<div class="og">
-  <h1>${esc(t.hero_title)}</h1>
-  <p>vickygonzalezmalave.netlify.app</p>
+  ${headline(t)}
+  <p>Victoria González Malavé · ${DOMAIN}</p>
 </div>`);
 
-const postCard = (t, title) => shell(`<div class="og">
-  <p class="eyebrow">${esc(t.blog_title)} · ${esc(t.meta_title)}</p>
+const postCard = (t, title) => shell(`<div class="og og--post">
+  <p class="eyebrow">${esc(t.blog_title)} · Victoria González Malavé</p>
   <h1>${esc(title)}</h1>
-  <p>vickygonzalezmalave.netlify.app</p>
+  <p>${DOMAIN}</p>
 </div>`);
 
-const squareCard = (t) => shell(`<div class="og og--square">
-  <h1>${esc(t.hero_title)}</h1>
+const squareCard = (t) => shell(`<div class="og">
+  ${headline(t)}
   <p class="lede">${esc(t.hero_lede)}</p>
-  <p>vickygonzalezmalave.netlify.app</p>
+  <p>${DOMAIN}</p>
 </div>`);
 
 const storyCard = (t) => shell(`<div class="og og--story">
-  <h1>${esc(t.hero_title)}</h1>
+  ${headline(t)}
   <p class="lede">${esc(t.hero_lede)}</p>
-  <p>vickygonzalezmalave.netlify.app</p>
+  <p>${DOMAIN}</p>
 </div>`);
 
 /** The title from a post's frontmatter; enough for a card, no YAML library. */

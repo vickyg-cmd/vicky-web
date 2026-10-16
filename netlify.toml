@@ -2,12 +2,8 @@
   command = "npm run build"
   publish = "dist"
 
-# One canonical host: vickygonzalezmalave.netlify.app, without www.
-[[redirects]]
-  from = "https://www.vickygonzalezmalave.netlify.app/*"
-  to = "https://vickygonzalezmalave.netlify.app/:splat"
-  status = 301
-  force = true
+# The www redirect goes here once Victoria picks a domain. Until then the
+# site lives at vickygonzalezmalave.netlify.app (placeholder, not created yet).
 
 # Astro fingerprints everything in /_astro/, so a changed file gets a new name
 # and these can be cached for good.

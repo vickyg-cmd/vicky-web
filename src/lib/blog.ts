@@ -5,7 +5,7 @@ import { langs, type Lang } from "../i18n/translations";
 
 export type Post = CollectionEntry<"blog">;
 
-/** "gl/some-post" -> "gl" and "some-post". */
+/** "en/some-post" -> "en" and "some-post". */
 export const postLang = (post: Post) => post.id.split("/")[0] as Lang;
 export const postSlug = (post: Post) => post.id.split("/").slice(1).join("/");
 
@@ -40,6 +40,6 @@ export function postCard(lang: Lang, slug: string): string | undefined {
   return existsSync(join(process.cwd(), "public", path)) ? path : undefined;
 }
 
-const locales: Record<Lang, string> = { es: "es-ES", gl: "gl-ES", en: "en-US" };
+const locales: Record<Lang, string> = { es: "es-ES", en: "en-US", ca: "ca-ES" };
 export const formatDate = (date: Date, lang: Lang) =>
   new Intl.DateTimeFormat(locales[lang], { day: "numeric", month: "long", year: "numeric" }).format(date);

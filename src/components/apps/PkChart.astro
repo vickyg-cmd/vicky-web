@@ -1,0 +1,86 @@
+---
+/** PK UPC's yearly demand, read off the chart in her project document
+ *  (design/source/pk-orig.jpg), rounded to the nearest hundred. One series,
+ *  so one color and no legend; the title names it. */
+import { translations, type Lang } from "../../i18n/translations";
+
+interface Props {
+  lang: Lang;
+}
+
+const t = translations[Astro.props.lang];
+const values = [2500, 2500, 2500, 1800, 1000, 1800, 2500, 2500, 2500, 2500, 300, 0];
+const max = 3000;
+const fmt = new Intl.NumberFormat(Astro.props.lang === "en" ? "en-US" : "es-ES");
+---
+
+<figure class="chart">
+  <figcaption><b>{t.pk_chart_title}</b></figcaption>
+  <div class="bars" aria-hidden="true">
+    {values.map((v, i) => (
+      <div class="bar" title={`${t.months_school[i]}: ≈${fmt.format(v)}`}>
+        <i style={`height: ${Math.max((v / max) * 100, 1.5)}%`}></i>
+        <span>{t.months_school[i].slice(0, 1)}</span>
+      </div>
+    ))}
+  </div>
+  <ul class="sr-table">
+    {values.map((v, i) => <li>{t.months_school[i]}: ≈{fmt.format(v)}</li>)}
+  </ul>
+  <p class="note">{t.pk_chart_note}</p>
+</figure>
+
+<style>
+  .chart {
+    display: grid;
+    gap: 0.35rem;
+    padding: 10px 10px 8px;
+    border-radius: 14px;
+    background: rgb(255 255 255 / 0.08);
+  }
+  figcaption {
+    font-size: 0.8rem;
+  }
+  .bars {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 2px;
+    height: 74px;
+    border-bottom: 1px solid rgb(255 255 255 / 0.35);
+  }
+  .bar {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    height: 100%;
+    cursor: default;
+  }
+  .bar i {
+    width: 100%;
+    border-radius: 4px 4px 0 0;
+    background: #5BE1A0;
+  }
+  .bar:hover i {
+    background: #fff;
+  }
+  .bar span {
+    position: absolute;
+    bottom: -16px;
+    width: 100%;
+    text-align: center;
+    font-size: 0.62rem;
+    opacity: 0.8;
+  }
+  .note {
+    margin-top: 14px;
+    font-size: 0.68rem;
+    opacity: 0.8;
+  }
+  .sr-table {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+</style>

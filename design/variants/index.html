@@ -1,0 +1,97 @@
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Victoria Portfolio Variants</title>
+<style>
+  :root {
+    --bg: #f4f4f2; --card: #ffffff; --ink: #161616; --muted: #5c5c5c; --line: #d9d9d4; --accent: #1f4fd1;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121212; --card: #1c1c1c; --ink: #ededed; --muted: #a3a3a3; --line: #333333; --accent: #8aa8ff;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121212; --card: #1c1c1c; --ink: #ededed; --muted: #a3a3a3; --line: #333333; --accent: #8aa8ff;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, sans-serif; }
+  header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 2; display: flex; flex-wrap: wrap; gap: .5rem 1rem; align-items: center; justify-content: space-between; padding-block: .75rem; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); background: var(--bg); border-bottom: 1px solid var(--line); }
+  header.top h1 { font-size: 1rem; margin: 0; }
+  .widths { display: flex; gap: .25rem; }
+  .widths button { font: inherit; font-size: .875rem; min-height: 44px; padding: 0 .9rem; border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 4px; cursor: pointer; }
+  .widths button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+  main { max-width: 1320px; margin: 0 auto; padding-block: 1rem 4rem; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .brief { color: var(--muted); max-width: 70ch; margin: .5rem 0 0; }
+  h2.round { font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 2.5rem 0 1rem; }
+  article { margin-bottom: 3rem; }
+  .meta { display: grid; gap: .2rem; margin-bottom: .75rem; }
+  .meta h3 { margin: 0; font-size: 1.125rem; }
+  .meta h3 span { color: var(--muted); font-weight: 400; margin-right: .4rem; }
+  .meta p { margin: 0; color: var(--muted); font-size: .9375rem; }
+  .meta .tags { font-size: .8125rem; }
+  .meta a { color: var(--accent); font-size: .875rem; }
+  .frame { width: 100%; margin: 0 auto; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--card); transition: max-width .2s; }
+  body[data-width="phone"] .frame { max-width: 390px; }
+  iframe { display: block; width: 100%; height: 80dvh; border: 0; }
+</style>
+<script>document.body.dataset.width="desktop";</script>
+<header class="top">
+  <h1>Victoria González Malavé: design directions</h1>
+  <div class="widths" role="group" aria-label="Preview width">
+    <button type="button" data-w="desktop" aria-pressed="true">Desktop</button>
+    <button type="button" data-w="phone" aria-pressed="false">Phone</button>
+  </div>
+</header>
+<main id="feed"><p class="brief">Bilingual portfolio (ES at root, EN) for a junior iOS developer in Barcelona. Main path: TermoTrendy on the App Store, then GitHub, then email. Feel: playful, outdoorsy, precise. Every look comes from her own life: climbing, the TermoTrendy app, release notes, castells. Each variant has a working EN button.</p></main>
+<script>
+  // One entry per variant. Rounds group in the order they first appear.
+  const VARIANTS = [
+    { n: 1, round: 1, file: "v01.html", name: "Croquis", idea: "Work wall: her projects drawn as routes on a climbing topo, graded on the French scale with her real 6c gym ceiling as the cap. Tap a route or a name and both light up.", fit: "Fits: outdoorsy and precise at once, and gives a recruiter a ranked list in five seconds. Risk: the grading joke needs a climber to land fully.", tags: "work wall · condensed grotesk + mono · muted limestone, one rope accent · SVG topo · :target + :has() highlight" },
+    { n: 2, round: 1, file: "v02.html", name: "¿Qué me pongo?", idea: "Tool first: the page opens on a toy TermoTrendy that reads Barcelona's live weather and dresses you, with a slider to try other temperatures. The page color follows the temperature.", fit: "Fits: the strongest proof she ships, and the most playful. Risk: it's the app's look, so the portfolio and the product blur. Live weather is blocked inside this gallery, so the slider stands in; it works on a real host.", tags: "tool first · rounded display · TermoTrendy palette and dots · App Store screenshots · live weather + slider" },
+    { n: 3, round: 1, file: "v03.html", name: "Victoria 3.0", idea: "Ledger: her career as an app's release notes, newest version first, with highlighter marks on what matters and filters (Apps, Work, Study) that need no script.", fit: "Fits: the most professional of the four, quick to read for a lead dev. Risk: the quietest, so playful shows only in the jokes (beta versions = sports, Requirements = stack).", tags: "ledger · typewriter mono + Atkinson · monochrome + yellow highlighter · type-only + small portrait · :has() filters" },
+    { n: 4, round: 1, file: "v04.html", name: "Castell", idea: "Story scroll: the page builds a castell from the base up. Pinya, tronc, terços, dosos, enxaneta, and the aleta is the contact. A tower beside the text fills in tier by tier.", fit: "Fits: the most personal (she was a crossa with Castellers de Sarrià) and the photo leads. Risk: the Catalan terms need glosses for an English reader, and the conceit works best read top to bottom.", tags: "story scroll · Big Shoulders + Work Sans · lilac duotone from her blazer · photo-led · tower fills on scroll" },
+    { n: 5, round: 2, file: "v05.html", name: "Desliza", idea: "A swipe deck like an app's onboarding: one bright card per idea (hello, TermoTrendy, how it works, PK UPC, now, off the screen, contact), with story-style progress bars, arrows and keyboard.", fit: "Fits: the most phone-native shape, and every card is short, which suits someone quick. Risk: desktop visitors have to flick sideways too (the mouse wheel moves it).", tags: "swipe deck · Unbounded + Onest · one saturated card at a time · scroll-snap + progress bars" },
+    { n: 6, round: 2, file: "v06.html", name: "A toda velocidad", idea: "She talks fast, so the page does: her intro flicks past one line at a time, each on a new color, with a voice-note speed pill (1x, 1.5x, 2x). Then it settles into a bright page where the parking lot fills up as you scroll.", fit: "Fits: the most her, going by your description. Risk: the motion is the personality, so with reduced motion it becomes a plain bright page.", tags: "kinetic type · Bricolage Grotesque on width and weight · lilac, tomato, sun · speed pill drives every animation" },
+    { n: 7, round: 2, file: "v07.html", name: "Tócalas", idea: "Her apps rebuilt as working phones on a loud yellow stage. TermoTrendy's home and weather screens copied from the real app and tappable, plus a PK UPC concept you can refresh.", fit: "Fits: the strongest proof she makes apps. A recruiter plays with it in the first five seconds. Risk: the outfit and closet screens are recreated examples (labeled), and her real app has to keep up with the page.", tags: "tool first · Schibsted Grotesk + rounded in-app type · black on yellow · live HTML prototypes with an iOS-style nav stack" },
+    { n: 8, round: 2, file: "v08.html", name: "Piezas", idea: "After variant.com: a left panel and a dark wall of small working widgets. TermoTrendy in a pocket, a parking meter, a timeline scrubber, a 6c gauge, keycaps for her stack, her photo through an RGB pixel grid, a language switch. Sorpréndeme reshuffles and recolors.", fit: "Fits: shows craft at the widget level, which is the actual job. Risk: closest to your reference, so it reads as a borrowed format, and it's the busiest.", tags: "widget wall · Instrument Sans + Serif italic + Spline Mono · dark, one swappable accent · View Transitions shuffle, canvas RGB portrait" },
+  ];
+
+  const feed = document.getElementById("feed");
+  document.body.dataset.width = "desktop";
+  let round = 0;
+  for (const v of [...VARIANTS].sort((a, b) => b.round - a.round || a.n - b.n)) {
+    if (v.round !== round) {
+      round = v.round;
+      const h = document.createElement("h2");
+      h.className = "round";
+      h.textContent = "Round " + round;
+      feed.append(h);
+    }
+    const a = document.createElement("article");
+    a.id = "v" + v.n;
+    a.innerHTML = `
+      <div class="meta">
+        <h3><span>#${v.n}</span></h3>
+        <p class="idea"></p>
+        <p class="fit"></p>
+        <p class="tags"></p>
+        <a target="_blank" rel="noopener">Open full page</a>
+      </div>
+      <div class="frame"><iframe loading="lazy"></iframe></div>`;
+    a.querySelector("h3").append(v.name);
+    a.querySelector(".idea").textContent = v.idea;
+    a.querySelector(".fit").textContent = v.fit;
+    a.querySelector(".tags").textContent = v.tags;
+    a.querySelector("a").href = v.file;
+    const f = a.querySelector("iframe");
+    f.src = v.file;
+    f.title = "Variant " + v.n + ": " + v.name;
+    feed.append(a);
+  }
+
+  for (const b of document.querySelectorAll(".widths button")) {
+    b.addEventListener("click", () => {
+      document.body.dataset.width = b.dataset.w;
+      for (const o of document.querySelectorAll(".widths button")) o.setAttribute("aria-pressed", String(o === b));
+    });
+  }
+</script>

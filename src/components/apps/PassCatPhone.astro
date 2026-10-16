@@ -1,0 +1,478 @@
+---
+import Phone from "./Phone.astro";
+
+// Copied from PassCat's App Store screenshots (Feb 2026), demo data included.
+// The in-app copy stays in Catalan in every language: it's what the real app says.
+const reptes = [
+  {
+    title: "Visitar el MACBA",
+    place: "Barcelona",
+    level: 1,
+    time: "1-2h",
+    points: 5,
+    cat: "Cultura i patrimoni",
+    text: "Descobreix el Museu d'Art Contemporani de Barcelona i les seves exposicions d'art modern i contemporani.",
+  },
+  {
+    title: "Cova amagada en Montserrat",
+    place: "Montserrat",
+    level: 2,
+    time: "2-3h",
+    points: 10,
+    cat: "Muntanya i natura",
+    text: "Troba la finestra oculta a la muntanya de Montserrat que et permet veure un petit llac dins d'una cova.",
+  },
+  {
+    title: "Fer el Camí de Ronda (2 nits)",
+    place: "Costa Brava",
+    level: 3,
+    time: "2-3 dies",
+    points: 15,
+    cat: "Muntanya i natura",
+    text: "Recorre dues etapes del Camí de Ronda de la Costa Brava gaudint de cales i paisatges durant 2 nits. Aprofita aquest impuls i endinsa't!",
+  },
+];
+const levelName = ["", "Fàcil", "Mitjà", "Difícil"];
+const cats = ["Tots", "Muntanya i natura", "Cultura i patrimoni", "Gastronomia"];
+const levels = [
+  { icon: "🥉", name: "Nouvingut", range: "De 0 - 200 punts", count: 15, open: true },
+  { icon: "🥈", name: "Explorador", range: "De 200 - 500 punts", count: 0 },
+  { icon: "🥇", name: "Coneixedor", range: "De 500 - 900 punts", count: 0 },
+  { icon: "🎖️", name: "Expert", range: "De 900 - 1400 punts", count: 0 },
+  { icon: "🏆", name: "Mestre", range: "De 1400 - 1979 punts", count: 0 },
+];
+---
+
+<Phone time="9:41" statusColor="#440505" id="pc">
+  <div class="view pc" data-tab="home">
+    <div class="pc-top">
+      <span aria-hidden="true">⚙︎</span>
+      <span class="pc-hello">Bones, Meritxell !</span>
+      <span class="pc-bell" aria-hidden="true">🔔</span>
+    </div>
+    <h3>Els meus èxits</h3>
+    <div class="stripe"></div>
+    <div class="pc-level">
+      <div class="pc-level__in">
+        <p class="pc-row"><b>🥉 Nouvingut</b><span class="pts">300 punts</span></p>
+        <div class="bar"><i style="width: 15%"></i></div>
+        <p class="pc-small">Total reptes completats: 12</p>
+      </div>
+    </div>
+    <div class="card">
+      <p class="pc-row"><b>📋 Els meus reptes</b><span aria-hidden="true">›</span></p>
+      <p class="pc-sub">Situació actual dels teus reptes</p>
+      <p class="pc-small">1 <u>Per validar</u><br />1 <u>Rebutjats</u></p>
+    </div>
+    <div class="card card--center">
+      <p class="pc-emoji" aria-hidden="true">💬</p>
+      <p class="pc-small">Expressió de la setmana</p>
+      <p class="word">Carrota</p>
+      <p class="pc-small">Altra manera de dir Pastanaga</p>
+    </div>
+  </div>
+
+  <div class="view pc" data-tab="reptes" hidden>
+    <h3>Reptes per fer</h3>
+    <div class="stripe"></div>
+    <p class="pc-sub pc-sub--center">Completa aquests reptes per guanyar punts i recompenses</p>
+    <p class="filter-label">Categoria</p>
+    <div class="chips-row" data-filter="cat">
+      {cats.map((c, i) => <button type="button" aria-pressed={i === 0 ? "true" : "false"} data-value={i === 0 ? "" : c}>{c}</button>)}
+    </div>
+    <p class="filter-label">Dificultat</p>
+    <div class="chips-row" data-filter="level">
+      <button type="button" aria-pressed="true" data-value="">Tots</button>
+      {[1, 2, 3].map((l) => <button type="button" aria-pressed="false" data-value={l}>{levelName[l]}{"⭐".repeat(l)}</button>)}
+    </div>
+    <ul class="reptes">
+      {reptes.map((r) => (
+        <li class="repte" data-cat={r.cat} data-level={r.level}>
+          <p class="pc-row"><b>{r.title}</b></p>
+          <p class="pc-row pc-small"><span>{r.place}</span><span>{"⭐".repeat(r.level)} {levelName[r.level]}</span></p>
+          <p class="meta">⏱️ {r.time} · 🏆 {r.points} punts · 🎯 {r.cat}</p>
+          <p class="pc-small">{r.text}</p>
+        </li>
+      ))}
+    </ul>
+    <p class="empty" hidden>😶<br />Ens hem quedat sense reptes per tú en aquesta categoría! Estic treballant en crear més!</p>
+  </div>
+
+  <div class="view pc" data-tab="avantatges" hidden>
+    <h3>Avantatges</h3>
+    <div class="stripe"></div>
+    <p class="pc-sub pc-sub--center">Acumula punts, desbloqueja estalvis</p>
+    <p class="pc-row"><span class="pc-small">Felicitats! Tens:</span><span class="pts pts--gold">300 punts</span></p>
+    <div class="bar"><i style="width: 15%"></i></div>
+    <p class="pc-small">Pròxim nivell: 🥈 Explorador (200 punts)</p>
+    <ul class="levels">
+      {levels.map((l) => (
+        <li class:list={["lvl", { "lvl--open": l.open }]}>
+          <span class="lvl__icon" aria-hidden="true">{l.icon}</span>
+          <span class="lvl__name"><b>{l.name}</b><small>{l.range}</small></span>
+          {l.open && <span class="lvl__tag">Desbloquejat</span>}
+          <span class="lvl__count">{l.count}</span>
+        </li>
+      ))}
+    </ul>
+    <div class="card card--center">
+      <p class="pc-emoji" aria-hidden="true">🎯</p>
+      <p><b class="maroon">Passaport Català</b></p>
+      <p class="pc-small">El nivell definitiu</p>
+      <p class="quote">"Quan arribes al Passaport Català, descobriràs un món d'avantatges exclusius que només els veritables coneixedors de Catalunya poden gaudir..."</p>
+    </div>
+  </div>
+
+  <nav class="tabbar" aria-label="PassCat">
+    <button type="button" data-go-tab="home" aria-pressed="true" aria-label="Home">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5V20a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z" /></svg>
+    </button>
+    <button type="button" data-go-tab="reptes" aria-pressed="false" aria-label="Reptes">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V3h2v1h12l-2.5 5L19 14H7v7z" /></svg>
+    </button>
+    <button type="button" data-go-tab="avantatges" aria-pressed="false" aria-label="Novetats">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h15v14H5a2 2 0 0 1-2-2zm15 3h3v9a2 2 0 0 1-2 2h-1zM6 8v4h5V8zm7 0v1.5h3V8zm0 2.5V12h3v-1.5zM6 14v1.5h10V14z" /></svg>
+    </button>
+  </nav>
+</Phone>
+
+<style>
+  /* PassCat's own theme, from its FlutterFlow config. Not the site palette. */
+  .pc {
+    --maroon: #440505;
+    --gold: #FFC759;
+    --red: #D64933;
+    --cream: #ECEDDC;
+    --slate: #4A6073;
+    background: var(--cream);
+    color: var(--slate);
+    font-family: "Outfit Variable", var(--app);
+    padding-bottom: 76px;
+    overflow-y: auto;
+    scrollbar-width: none;
+    gap: 10px;
+  }
+  .pc[hidden] {
+    display: none;
+  }
+  .pc p {
+    margin: 0;
+  }
+  .pc-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--maroon);
+    font-size: 15px;
+  }
+  .pc-hello {
+    flex: 1;
+    font: 600 12px "Outfit Variable", var(--app);
+    color: var(--slate);
+  }
+  .pc-bell {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: var(--maroon);
+    font-size: 13px;
+  }
+  h3 {
+    margin: 2px 0 0;
+    color: var(--maroon);
+    font: 700 21px/1.1 "Outfit Variable", var(--app);
+    text-align: center;
+  }
+  .stripe {
+    align-self: center;
+    flex: none;
+    width: 74px;
+    height: 6px;
+    border-radius: 3px;
+    background: repeating-linear-gradient(90deg, var(--red) 0 6px, var(--gold) 6px 12px);
+  }
+  .pc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .pc-row b,
+  .maroon {
+    color: var(--maroon);
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1.15;
+  }
+  .pc-sub {
+    font: 600 12px/1.3 "Outfit Variable", var(--app);
+    color: var(--maroon);
+  }
+  .pc-sub--center {
+    text-align: center;
+    color: var(--slate);
+  }
+  .pc-small {
+    font-size: 11.5px;
+    line-height: 1.35;
+  }
+  .pc-emoji {
+    font-size: 24px;
+  }
+  .pts {
+    flex: none;
+    padding: 3px 10px;
+    border-radius: 8px;
+    background: #C7A39B;
+    color: var(--maroon);
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .pts--gold {
+    background: var(--gold);
+  }
+  .bar {
+    flex: none;
+    height: 10px;
+    border-radius: 6px;
+    background: #D9C4BC;
+    overflow: hidden;
+  }
+  .bar i {
+    display: block;
+    height: 100%;
+    border-radius: 6px;
+    background: var(--maroon);
+  }
+  .pc-level {
+    padding: 8px;
+    border: 2px solid var(--maroon);
+    border-radius: 16px;
+    background: repeating-linear-gradient(90deg, #F5D9A0 0 10px, #F2C6B5 10px 20px);
+  }
+  .pc-level__in {
+    display: grid;
+    gap: 7px;
+    padding: 10px;
+    border: 2px solid var(--maroon);
+    border-radius: 12px;
+    background: var(--cream);
+    text-align: center;
+  }
+  .card {
+    display: grid;
+    gap: 5px;
+    padding: 12px;
+    border-radius: 14px;
+    background: #F6F3E6;
+    box-shadow: 0 2px 6px rgb(68 5 5 / 0.12);
+  }
+  .card--center {
+    justify-items: center;
+    text-align: center;
+  }
+  .word {
+    padding: 8px 32px;
+    border-radius: 10px;
+    background: #E8BA45;
+    color: var(--maroon);
+    font: 700 19px "Outfit Variable", var(--app);
+  }
+  .quote {
+    padding: 8px;
+    border: 1.5px solid #C9C3B0;
+    border-radius: 10px;
+    font-size: 11px;
+    line-height: 1.35;
+  }
+
+  /* Reptes */
+  .filter-label {
+    margin-bottom: -4px;
+    color: var(--maroon);
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .chips-row {
+    display: flex;
+    flex: none;
+    gap: 6px;
+    margin: -2px -18px;
+    padding: 2px 18px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .chips-row button {
+    flex: none;
+    min-height: 32px;
+    padding: 0 10px;
+    /* An inset shadow, not a border: 1.5px borders drop a side at some zoom levels. */
+    border: 0;
+    box-shadow: inset 0 0 0 1.5px var(--maroon);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--maroon);
+    font: 600 12px "Outfit Variable", var(--app);
+    cursor: pointer;
+  }
+  .chips-row button[aria-pressed="true"] {
+    background: var(--maroon);
+    color: var(--cream);
+  }
+  .reptes {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .repte {
+    display: grid;
+    gap: 5px;
+    padding: 12px;
+    border-radius: 14px;
+    background: #F6F3E6;
+    box-shadow: inset 0 0 0 1.5px #B9C2C6;
+  }
+  .repte[hidden],
+  .empty[hidden] {
+    display: none;
+  }
+  .meta {
+    font-size: 10.5px;
+    font-weight: 600;
+  }
+  .empty {
+    padding: 16px 8px;
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  /* Avantatges */
+  .levels {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .lvl {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 10px;
+    border-radius: 12px;
+    background: #8D969B;
+    color: #DDE1E2;
+  }
+  .lvl--open {
+    border: 2px solid var(--maroon);
+    background: #F6F3E6;
+    color: var(--slate);
+  }
+  .lvl__icon {
+    font-size: 18px;
+  }
+  .lvl__name {
+    flex: 1;
+    display: grid;
+    font-size: 10px;
+  }
+  .lvl__name b {
+    font-size: 15px;
+    line-height: 1.1;
+  }
+  .lvl--open .lvl__name b {
+    color: var(--maroon);
+  }
+  .lvl__tag {
+    padding: 3px 6px;
+    border-radius: 6px;
+    background: #4CAF50;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .lvl__count {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #5C6A72;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .lvl--open .lvl__count {
+    background: var(--maroon);
+  }
+
+  .tabbar {
+    position: absolute;
+    z-index: 2;
+    inset: auto 0 0;
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 20px 18px;
+    background: #440505;
+  }
+  .tabbar button {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 44px;
+    border: 0;
+    background: none;
+    color: #ECEDDC;
+    cursor: pointer;
+  }
+  .tabbar button[aria-pressed="true"] {
+    color: #FFC759;
+  }
+  .tabbar svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+  }
+</style>
+
+<script>
+  const pc = document.getElementById("pc")!;
+  const views = pc.querySelectorAll<HTMLElement>("[data-tab]");
+  const tabs = pc.querySelectorAll<HTMLButtonElement>("[data-go-tab]");
+
+  // Tab bar: show one screen, like a TabView.
+  tabs.forEach((tab) =>
+    tab.addEventListener("click", () => {
+      views.forEach((v) => {
+        v.hidden = v.dataset.tab !== tab.dataset.goTab;
+        v.scrollTop = 0;
+      });
+      tabs.forEach((t) => t.setAttribute("aria-pressed", String(t === tab)));
+    }),
+  );
+
+  // Reptes filters: one choice per row, both rows apply.
+  const filters: Record<string, string> = { cat: "", level: "" };
+  const reptes = pc.querySelectorAll<HTMLElement>(".repte");
+  const empty = pc.querySelector<HTMLElement>(".empty")!;
+  pc.querySelectorAll<HTMLElement>("[data-filter]").forEach((row) =>
+    row.addEventListener("click", (e) => {
+      const chip = (e.target as HTMLElement).closest<HTMLButtonElement>("button");
+      if (!chip) return;
+      row.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b === chip)));
+      filters[row.dataset.filter!] = chip.dataset.value!;
+      let shown = 0;
+      reptes.forEach((r) => {
+        const ok = (!filters.cat || r.dataset.cat === filters.cat) && (!filters.level || r.dataset.level === filters.level);
+        r.hidden = !ok;
+        if (ok) shown++;
+      });
+      empty.hidden = shown > 0;
+    }),
+  );
+</script>
