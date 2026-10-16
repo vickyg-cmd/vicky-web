@@ -60,9 +60,10 @@ const last = total - 1;
 
     <ul class="now-list">
       {rows.map((r, i) => (
-        <li data-i={i} data-a={r.a} data-b={r.b} class={`item item--${r.kind}`}>
+        <li data-i={i} data-a={r.a} data-b={r.b} class={`item item--${r.kind}`} style={`--a: ${r.a}; --b: ${r.b}; --total: ${total}`}>
           <b>{r.title[lang]}</b>
           <span>{t.tl_kinds[r.kind]} · {range(r)}</span>
+          <i class="span" aria-hidden="true"></i>
         </li>
       ))}
     </ul>
@@ -269,20 +270,37 @@ const last = total - 1;
     padding: 0;
     list-style: none;
   }
+  /* Each card carries its own bar: where it sits on the 2021 to today axis,
+     the same mark as the chart above, so the color does its job in place. */
   .item {
     display: grid;
     gap: 0.2rem;
-    padding: 0.8rem 1rem 0.85rem;
+    padding: 0.8rem 1rem 0.9rem;
     border: 2px solid var(--ink);
-    border-left-width: 10px;
     border-radius: var(--radius);
     background: #fff;
   }
   .item[hidden] { display: none; }
-  .item--study { border-left-color: var(--study); }
-  .item--work { border-left-color: var(--work); }
-  .item--app { border-left-color: var(--sun); background: #FFFBEA; }
-  .item--life { border-left-color: var(--life); }
+  .span {
+    position: relative;
+    height: 8px;
+    margin-top: 0.55rem;
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--ink) 10%, transparent);
+  }
+  .span::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 calc(var(--a) / var(--total) * 100%);
+    width: max(calc((var(--b) - var(--a) + 1) / var(--total) * 100%), 8px);
+    border-radius: 4px;
+    background: var(--kind);
+  }
+  .item--study { --kind: var(--study); }
+  .item--work { --kind: var(--work); }
+  .item--app { --kind: var(--app); }
+  .item--app .span::before { box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .item--life { --kind: var(--life); }
   .item b {
     line-height: 1.2;
   }
@@ -328,7 +346,11 @@ const last = total - 1;
     show(+input.value);
   });
 
-  // Play runs from the first month to today at the pace the speed button sets.
+  // Play runs from the first month to today at the pace the speed button sets,
+  // and lingers on any month where something starts so the change can be read.
+  const MONTH = 260;
+  const HOLD = 900;
+  const starts = new Set([...items].map((li) => +li.dataset.a!));
   let timer = 0;
   function stop() {
     clearTimeout(timer);
@@ -340,7 +362,7 @@ const last = total - 1;
     if (i > last) return stop();
     input.value = String(i);
     show(i);
-    timer = window.setTimeout(step, 110 / speed());
+    timer = window.setTimeout(step, (starts.has(i) ? MONTH + HOLD : MONTH) / speed());
   }
   play.addEventListener("click", () => {
     if (play.getAttribute("aria-pressed") === "true") return stop();
@@ -350,7 +372,7 @@ const last = total - 1;
     }
     play.setAttribute("aria-pressed", "true");
     play.querySelector("span")!.textContent = play.dataset.pause!;
-    timer = window.setTimeout(step, 110 / speed());
+    timer = window.setTimeout(step, MONTH / speed());
   });
 
   show(last);

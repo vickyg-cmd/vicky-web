@@ -112,9 +112,9 @@ const t = translations[lang];
     padding: 0;
     list-style: none;
   }
-  .back__body :global(li) {
-    padding-left: 0.9rem;
-    border-left: 3px solid currentColor;
+  .back__body :global(li + li) {
+    padding-top: 0.55rem;
+    border-top: 1px solid color-mix(in srgb, currentColor 35%, transparent);
   }
 
   .flip__btn {
