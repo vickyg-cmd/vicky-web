@@ -1,0 +1,30 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Nav from "./Nav.astro";
+import { translations, type Lang } from "../i18n/translations";
+import { EMAIL } from "../config";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = translations[lang];
+---
+
+<!-- Placeholder sections. Replace them with the real design; keep the ids in
+     step with t.nav. -->
+<Layout lang={lang}>
+  <Nav lang={lang} />
+  <main>
+    <section class="wrap section">
+      <h1>{t.hero_title}</h1>
+      <p>{t.hero_lede}</p>
+    </section>
+    <section id="contacto" class="wrap section">
+      <h2>{t.contact_title}</h2>
+      <p>{t.contact_body}</p>
+      <p><a href={`mailto:${EMAIL}`}>{EMAIL}</a></p>
+    </section>
+  </main>
+</Layout>

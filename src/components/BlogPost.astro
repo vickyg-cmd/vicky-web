@@ -1,0 +1,51 @@
+---
+import { render } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import Nav from "./Nav.astro";
+import { langPath, translations } from "../i18n/translations";
+import { SITE_NAME } from "../config";
+import { formatDate, postCard, postLang, postLangs, postSlug, type Post } from "../lib/blog";
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const lang = postLang(post);
+const slug = postSlug(post);
+const t = translations[lang];
+const subpath = `blog/${slug}`;
+const alternates = await postLangs(slug);
+const card = postCard(lang, slug);
+const { Content } = await render(post);
+const { title, description, pubDate, updatedDate } = post.data;
+---
+
+<!-- Unstyled on purpose: give it the site's look along with the home page. -->
+<Layout
+  lang={lang}
+  subpath={subpath}
+  alternates={alternates}
+  title={`${title} | ${SITE_NAME}`}
+  description={description}
+  ogImage={card}
+  ogImageAlt={card ? title : undefined}
+  ogType="article"
+>
+  <Nav lang={lang} subpath={subpath} alternates={alternates} />
+  <main class="wrap section">
+    <article class="post">
+      <header>
+        <h1>{title}</h1>
+        <p class="post__meta">
+          <time datetime={pubDate.toISOString()}>{formatDate(pubDate, lang)}</time>
+          {updatedDate && <> · <time datetime={updatedDate.toISOString()}>{formatDate(updatedDate, lang)}</time></>}
+        </p>
+      </header>
+      <div class="prose">
+        <Content />
+      </div>
+      <p><a href={langPath(lang, "blog")}>← {t.blog_back}</a></p>
+    </article>
+  </main>
+</Layout>

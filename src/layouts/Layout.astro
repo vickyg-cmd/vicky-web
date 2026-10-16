@@ -1,0 +1,101 @@
+---
+import "../styles/global.css";
+import { langs, langPath, translations, ROOT_LANG, type Lang } from "../i18n/translations";
+import { SITE_NAME, BRAND_COLOR } from "../config";
+
+interface Props {
+  lang: Lang;
+  /** Page path shared across languages, e.g. "" for home. Used for hreflang alternates. */
+  subpath?: string;
+  /** Overrides for pages outside the home page, like the 404 or a blog post. */
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+  /** The languages this page exists in. A blog post may not have all three. */
+  alternates?: Lang[];
+  /** Share image path, e.g. "/og/gl/some-post.png". Defaults to the language's site card. */
+  ogImage?: string;
+  /** What the share image shows. Defaults to t.og_alt. */
+  ogImageAlt?: string;
+  ogType?: "website" | "article";
+}
+
+const {
+  lang,
+  subpath = "",
+  title,
+  description,
+  noindex = false,
+  alternates = langs,
+  ogImage,
+  ogImageAlt,
+  ogType = "website",
+} = Astro.props;
+const t = translations[lang];
+const pageTitle = title ?? t.meta_title;
+const pageDescription = description ?? t.meta_description;
+const canonical = new URL(langPath(lang, subpath), Astro.site);
+// Site cards and post cards are rendered by scripts/og.mjs, one per language.
+const ogImageUrl = new URL(ogImage ?? `/og/og-${lang}.png`, Astro.site).href;
+const ogLocales: Record<Lang, string> = { es: "es_ES", gl: "gl_ES", en: "en_US" };
+// x-default points at the root language when the page has one, else the first it has.
+const xDefault = alternates.includes(ROOT_LANG) ? ROOT_LANG : alternates[0];
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    {noindex && <meta name="robots" content="noindex" />}
+    {!noindex && <link rel="canonical" href={canonical} />}
+    {!noindex && alternates.length > 1 && alternates.map((l) => <link rel="alternate" hreflang={l} href={new URL(langPath(l, subpath), Astro.site)} />)}
+    {!noindex && alternates.length > 1 && <link rel="alternate" hreflang="x-default" href={new URL(langPath(xDefault, subpath), Astro.site)} />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content={BRAND_COLOR} />
+
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:locale" content={ogLocales[lang]} />
+    {alternates.filter((l) => l !== lang).map((l) => <meta property="og:locale:alternate" content={ogLocales[l]} />)}
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogImageAlt ?? t.og_alt} />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <slot />
+    <script>
+      // Two things can move a section after a jump starts, so it lands in the
+      // wrong place on a first visit:
+      // 1. A section with content-visibility: auto counts as its
+      //    contain-intrinsic-size until it nears the screen. Lay those out for
+      //    real before jumping. Mark them with data-defer.
+      // 2. Web fonts arriving mid-jump make the text above the target taller.
+      //    Wait for them. Once they're cached this is instant.
+      document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((a) => {
+        const target = a.hash.length > 1 ? document.querySelector(a.hash) : null;
+        if (!target) return;
+        a.addEventListener("click", (e) => {
+          e.preventDefault();
+          document.querySelectorAll<HTMLElement>("[data-defer]").forEach((el) => {
+            el.style.contentVisibility = "visible";
+          });
+          // Force layout now so any newly shown fonts start loading before we
+          // ask whether the fonts are ready.
+          void document.body.offsetHeight;
+          document.fonts.ready.then(() => {
+            target.scrollIntoView();
+            history.pushState(null, "", a.hash);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

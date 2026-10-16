@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://vickygonzalezmalave.netlify.app/sitemap-index.xml

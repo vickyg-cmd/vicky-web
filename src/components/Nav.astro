@@ -1,0 +1,39 @@
+---
+import { langs, langPath, translations, type Lang } from "../i18n/translations";
+import { SITE_NAME } from "../config";
+
+interface Props {
+  lang: Lang;
+  /** "" on the home page; e.g. "blog/some-post" elsewhere. */
+  subpath?: string;
+  /** The languages this page exists in. The switcher sends the rest home. */
+  alternates?: Lang[];
+}
+
+const { lang, subpath = "", alternates = langs } = Astro.props;
+const t = translations[lang];
+// Section links are anchors on the home page; from any other page they go home first.
+const home = subpath ? langPath(lang) : "";
+const switchTo = (l: Lang) => langPath(l, alternates.includes(l) ? subpath : "");
+---
+
+<!-- Own bar so it can stay stuck to the top for the whole page. -->
+<div class="nav-bar">
+  <header class="wrap nav">
+    <a class="nav__brand" href={subpath ? langPath(lang) : "#top"}>{SITE_NAME}</a>
+    <nav class="nav__links" aria-label={t.nav_main}>
+      {t.nav.map((n) => <a href={`${home}#${n.id}`}>{n.label}</a>)}
+    </nav>
+    <ul class="nav__langs" aria-label={t.lang_label}>
+      {langs.map((l) => (
+        <li>
+          {l === lang ? (
+            <span aria-current="true">{l.toUpperCase()}</span>
+          ) : (
+            <a href={switchTo(l)} hreflang={l} lang={l}>{l.toUpperCase()}</a>
+          )}
+        </li>
+      ))}
+    </ul>
+  </header>
+</div>

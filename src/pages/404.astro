@@ -1,0 +1,21 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { langs, langPath, translations, ROOT_LANG } from "../i18n/translations";
+import { SITE_NAME } from "../config";
+
+// One page for all three languages: Netlify serves it for any missing path,
+// so there is no way to know which language the visitor came from.
+---
+
+<Layout lang={ROOT_LANG} title={`404 | ${SITE_NAME}`} noindex>
+  <main class="wrap section">
+    <h1>404</h1>
+    <ul>
+      {langs.map((l) => (
+        <li lang={l}>
+          {translations[l].notfound} <a href={langPath(l)}>{translations[l].notfound_link}</a>
+        </li>
+      ))}
+    </ul>
+  </main>
+</Layout>

@@ -1,0 +1,12 @@
+---
+import BlogPost from "../../components/BlogPost.astro";
+import { ROOT_LANG } from "../../i18n/translations";
+import { getPosts, postSlug } from "../../lib/blog";
+
+// Posts in the root language live at /blog/<slug>/.
+export async function getStaticPaths() {
+  return (await getPosts(ROOT_LANG)).map((post) => ({ params: { slug: postSlug(post) }, props: { post } }));
+}
+---
+
+<BlogPost post={Astro.props.post} />

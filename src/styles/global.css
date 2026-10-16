@@ -1,0 +1,159 @@
+/* Victoria González Malavé
+   Plumbing only: tokens, reset, layout width and the sticky nav. The look
+   comes from the site's own references, not from this file. */
+
+:root {
+  --brand: #111014;
+  --paper: #ffffff;
+  --ink: #1a1a1a;
+  --muted: #555555;
+
+  --serif: Georgia, serif;
+  --sans: system-ui, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --radius: 6px;
+  --gutter: clamp(1.25rem, 5vw, 4.5rem);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Keeps section headings clear of the sticky nav after an anchor jump.
+     Match it to the nav's real height at each breakpoint. */
+  scroll-padding-top: 7rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+figure {
+  margin: 0;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  display: grid;
+  gap: 1rem;
+  padding-block: 4rem;
+}
+
+/* ---- Nav ---- */
+.nav-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--brand);
+  color: var(--paper);
+}
+
+/* Narrow: brand and languages share the top row, links sit beneath.
+   Wide: all three on one line. */
+.nav {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "brand langs"
+    "links links";
+  align-items: center;
+  row-gap: 0.4rem;
+  padding-block: 0.9rem 0.6rem;
+}
+.nav__brand {
+  grid-area: brand;
+  width: fit-content;
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  text-decoration: none;
+}
+.nav__links {
+  grid-area: links;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 0.9rem;
+  font-weight: 600;
+}
+/* 44px tap targets. */
+.nav__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  text-decoration: none;
+}
+.nav__langs {
+  grid-area: langs;
+  display: flex;
+  gap: 0.25rem;
+  padding: 0;
+  list-style: none;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+.nav__langs a,
+.nav__langs span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 0.5rem;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  text-decoration: none;
+}
+.nav__langs span {
+  border-color: currentColor;
+}
+
+@media (min-width: 760px) {
+  html {
+    scroll-padding-top: 6rem;
+  }
+  .nav {
+    grid-template-columns: 1fr auto auto;
+    grid-template-areas: "brand links langs";
+    column-gap: 2rem;
+    padding-block: 1.2rem;
+  }
+  .nav__links {
+    column-gap: 2rem;
+  }
+}
+
+/* Blog: just enough to read. Restyle with the rest of the site. */
+.post, .post-list { max-width: 42rem; }
+.post__meta, .post-list time { color: var(--muted); font-size: 0.9rem; }
+.prose > * + * { margin-top: 1em; }
+.post-list { list-style: none; padding: 0; display: grid; gap: 1.75rem; }
+.post-list a { display: block; font-size: 1.25rem; }
