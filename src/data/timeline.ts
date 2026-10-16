@@ -35,13 +35,13 @@ export const events: Event[] = [
     start: "2022-09",
     end: "2024-06",
     kind: "study",
-    title: { es: "Estudios en la UPC", ca: "Estudis a la UPC", en: "Studying at UPC" },
+    title: { es: "Ing. Sistemas Audiovisuales, UPC Terrassa", ca: "Eng. Sistemes Audiovisuals, UPC Terrassa", en: "Audiovisual Systems Eng., UPC Terrassa" },
   },
   {
     start: "2023-12",
     end: "2024-05",
     kind: "work",
-    title: { es: "Prácticas en servicios TIC, UPC Terrassa", ca: "Pràctiques als serveis TIC, UPC Terrassa", en: "IT services intern, UPC Terrassa" },
+    title: { es: "Sistemas informáticos, campus de Terrassa", ca: "Sistemes informàtics, campus de Terrassa", en: "IT systems, UPC Terrassa campus" },
   },
   {
     start: "2024-02",
@@ -58,7 +58,7 @@ export const events: Event[] = [
     start: "2024-09",
     end: "now",
     kind: "study",
-    title: { es: "Bachelor + Máster en Epitech", ca: "Bachelor + Màster a Epitech", en: "Bachelor + Master at Epitech" },
+    title: { es: "Bachelor en Epitech (2024-2027)", ca: "Bachelor a Epitech (2024-2027)", en: "Bachelor at Epitech (2024-2027)" },
   },
   {
     start: "2025-06",
@@ -68,7 +68,7 @@ export const events: Event[] = [
   },
   {
     start: "2025-09",
-    end: "now",
+    end: "2026-09",
     kind: "work",
     title: { es: "FlutterFlow y tech lead en two.zero", ca: "FlutterFlow i tech lead a two.zero", en: "FlutterFlow and tech lead at two.zero" },
   },

@@ -8,42 +8,93 @@ interface Props {
 const t = translations[Astro.props.lang];
 ---
 
-<section class="now section" id="ahora" aria-labelledby="now-title">
-  <div class="wrap">
-    <h2 id="now-title">{t.now_title}</h2>
-    <ul class="cards">
-      {t.now.map((n) => <li><b>{n.title}</b><span>{n.when}</span></li>)}
-    </ul>
+<section class="now section" id="ahora" aria-labelledby="now-ahora-title">
+  <div class="wrap now__grid">
+    <div class="now__col">
+      <h2 class="col-heading" id="now-ahora-title">{t.now_title}</h2>
+      <ul class="now__items">
+        {t.now.map((n) => (
+          <li>
+            <b>{n.title}</b>
+            <span>{n.when}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="now__col">
+      <h2 class="col-heading">{t.now_before_title}</h2>
+      <ul class="now__items">
+        {t.now_before.map((n) => (
+          <li>
+            <b>{n.title}</b>
+            <span>{n.when}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="now__col">
+      <h2 class="col-heading">{t.now_yo_title}</h2>
+      <p class="now__family">{t.off_family}</p>
+      <ul class="chips now__chips">
+        {t.off_sports.map((s) => <li>{s}</li>)}
+      </ul>
+    </div>
   </div>
 </section>
 
 <style>
   .now {
-    padding-bottom: clamp(2.5rem, 6vw, 4rem);
+    background: var(--red);
+    color: var(--paper);
   }
-  .cards {
+  .now__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-    gap: 1rem;
-    padding: 0;
+    gap: clamp(2rem, 5vw, 3.5rem);
+  }
+  @media (min-width: 760px) {
+    .now__grid {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+  .col-heading {
+    display: inline-block;
+    padding: 0.02em 0.1em;
+    border-radius: 0.1em;
+    margin-bottom: 1.5rem;
+  }
+  .now__col:nth-child(1) .col-heading { background: var(--green); color: var(--paper); }
+  .now__col:nth-child(2) .col-heading { background: var(--sun); color: var(--ink); }
+  .now__col:nth-child(3) .col-heading { background: var(--muted); color: var(--paper); }
+  .now__items {
     list-style: none;
-  }
-  li {
+    padding: 0;
     display: grid;
-    align-content: start;
-    gap: 0.3rem;
-    padding: 1.1rem 1.2rem;
-    border: 3px solid var(--ink);
-    border-radius: var(--radius);
+    gap: 1.25rem;
   }
-  li:nth-child(1) { background: var(--sun); }
-  li:nth-child(2) { background: var(--green); }
-  li:nth-child(3) { background: var(--butter); }
-  b {
-    font-size: 1.2rem;
+  .now__items li {
+    display: grid;
+    gap: 0.2rem;
+  }
+  .now__items b {
+    font-size: 1.05rem;
     line-height: 1.2;
   }
-  span {
-    font-size: 0.95rem;
+  .now__items span {
+    font-size: 0.9rem;
+    color: rgba(255 247 214 / 0.7);
   }
+  .now__family {
+    font-size: 0.95rem;
+    max-width: 32ch;
+    margin-bottom: 1.25rem;
+    color: rgba(255 247 214 / 0.85);
+    line-height: 1.5;
+  }
+  .now__chips :global(li:nth-child(1)) { background: var(--ink); color: var(--paper); }
+  .now__chips :global(li:nth-child(2)) { background: var(--olive); color: var(--paper); }
+  .now__chips :global(li:nth-child(3)) { background: var(--blue); color: var(--paper); }
+  .now__chips :global(li:nth-child(4)) { background: var(--sun); color: var(--ink); }
+  .now__chips :global(li:nth-child(5)) { background: var(--green); color: var(--paper); }
 </style>

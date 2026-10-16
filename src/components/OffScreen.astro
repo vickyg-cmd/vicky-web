@@ -22,7 +22,25 @@ const t = translations[Astro.props.lang];
 
 <style>
   .off {
-    background: var(--butter);
+    background:
+      repeating-linear-gradient(
+        180deg,
+        rgba(255 255 255 / 0.04) 0px,
+        rgba(255 255 255 / 0.04) 1px,
+        transparent 1px,
+        transparent 48px
+      ),
+      linear-gradient(
+        165deg,
+        #261c12 0%,
+        #3B2C22 20%,
+        #5c4535 37%,
+        #7C805D 52%,
+        #4a3d28 67%,
+        #3B2C22 83%,
+        #261c12 100%
+      );
+    color: var(--paper);
   }
   .off__in {
     display: grid;
@@ -47,7 +65,9 @@ const t = translations[Astro.props.lang];
   .chips {
     margin-top: 1.25rem;
   }
-  .chips li {
-    color: var(--butter);
-  }
+  .chips li:nth-child(1) { background: var(--red); }
+  .chips li:nth-child(2) { background: var(--olive); }
+  .chips li:nth-child(3) { background: var(--blue); }
+  .chips li:nth-child(4) { background: var(--sun); color: var(--ink); }
+  .chips li:nth-child(5) { background: var(--green); }
 </style>
