@@ -23,7 +23,7 @@ const t = translations[lang];
         <OffkitWeb />
       </BrowserFrame>
       <div class="web__info">
-        <p class="web__name">offkit <span>bcn</span></p>
+        <p class="web__name"><img src="/img/offkit-icon.png" alt="" />offkit <span>es</span></p>
         <p>{t.offkit_line}</p>
         <ul class="chips">{t.offkit_facts.map((f) => <li>{f}</li>)}</ul>
         <div class="web__acts">
@@ -96,10 +96,19 @@ const t = translations[lang];
     justify-items: start;
   }
   .web__name {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     font-weight: 900;
     font-size: 2rem;
     line-height: 1;
     letter-spacing: -0.03em;
+  }
+  .web__name img {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    flex-shrink: 0;
   }
   .web__name span {
     display: inline-block;
