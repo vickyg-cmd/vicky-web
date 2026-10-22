@@ -41,6 +41,12 @@ export interface Translations {
   hero_again: string;
 
   apps_title: string;
+
+  webs_title: string;
+  webs_body: string;
+  offkit_line: string;
+  offkit_facts: string[];
+  offkit_cta: string;
   apps_body: string;
   /** Label for the app picker shown when the phones don't all fit. */
   apps_pick: string;
@@ -159,6 +165,12 @@ export const translations: Record<Lang, Translations> = {
 
     apps_title: "Tócalas. Son mis <em>apps.</em>",
     apps_body: "Cuatro apps mías, rehechas para esta página. Venga, pulsa los botones.",
+
+    webs_title: "Y también hago <em>webs.</em>",
+    webs_body: "Landings, SaaS y proyectos propios con Astro.",
+    offkit_line: "Preventa de kits analógicos para desconectar del móvil. Astro + Supabase, hecha en solitario.",
+    offkit_facts: ["offkitbcn.com", "Astro + Supabase", "oct. 2026"],
+    offkit_cta: "Ver offkit",
     apps_pick: "Elige una app",
     example_note: "Pantalla de ejemplo, recreada para esta web",
 
@@ -294,6 +306,12 @@ export const translations: Record<Lang, Translations> = {
 
     apps_title: "Tap them. They're my <em>apps.</em>",
     apps_body: "Four of my apps, remade for this page. Go on, press the buttons.",
+
+    webs_title: "And I build <em>webs</em> too.",
+    webs_body: "Landings, SaaS and personal projects with Astro.",
+    offkit_line: "Pre-sale landing for analog kits to disconnect from your phone. Astro + Supabase, built solo.",
+    offkit_facts: ["offkitbcn.com", "Astro + Supabase", "Oct 2026"],
+    offkit_cta: "See offkit",
     apps_pick: "Pick an app",
     example_note: "Example screen, recreated for this page",
 
@@ -429,6 +447,12 @@ export const translations: Record<Lang, Translations> = {
 
     apps_title: "Toca-les. Són les meves <em>apps.</em>",
     apps_body: "Quatre apps meves, refetes per a aquesta pàgina. Va, prem els botons.",
+
+    webs_title: "I també faig <em>webs.</em>",
+    webs_body: "Landings, SaaS i projectes propis amb Astro.",
+    offkit_line: "Prevenda de kits analògics per desconnectar del mòbil. Astro + Supabase, feta en solitari.",
+    offkit_facts: ["offkitbcn.com", "Astro + Supabase", "oct. 2026"],
+    offkit_cta: "Veure offkit",
     apps_pick: "Tria una app",
     example_note: "Pantalla d'exemple, recreada per a aquest web",
 

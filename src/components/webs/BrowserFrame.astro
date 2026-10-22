@@ -1,0 +1,70 @@
+---
+interface Props {
+  url: string;
+}
+const { url } = Astro.props;
+---
+
+<div class="browser">
+  <div class="browser__bar" aria-hidden="true">
+    <span class="browser__dots">
+      <i></i><i></i><i></i>
+    </span>
+    <span class="browser__url">{url}</span>
+  </div>
+  <div class="browser__screen">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .browser {
+    width: 380px;
+    border-radius: 12px;
+    background: #1a1a1a;
+    box-shadow: 0 30px 50px -20px rgb(17 16 20 / 0.55);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .browser__bar {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0 0.75rem;
+    height: 36px;
+    background: #2a2a2a;
+    border-bottom: 1px solid rgb(255 255 255 / 0.08);
+  }
+  .browser__dots {
+    display: flex;
+    gap: 5px;
+    flex-shrink: 0;
+  }
+  .browser__dots i {
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #555;
+  }
+  .browser__dots i:nth-child(1) { background: #ff5f57; }
+  .browser__dots i:nth-child(2) { background: #febc2e; }
+  .browser__dots i:nth-child(3) { background: #28c840; }
+  .browser__url {
+    flex: 1;
+    background: #1a1a1a;
+    border-radius: 5px;
+    padding: 0.15rem 0.6rem;
+    font-size: 0.7rem;
+    color: #888;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: monospace;
+  }
+  .browser__screen {
+    width: 100%;
+    height: 260px;
+    overflow: hidden;
+  }
+</style>

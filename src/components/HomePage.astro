@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import Nav from "./Nav.astro";
 import Hero from "./Hero.astro";
 import Apps from "./Apps.astro";
+import Webs from "./Webs.astro";
 import Ticker from "./Ticker.astro";
 import Now from "./Now.astro";
 import Timeline from "./Timeline.astro";
@@ -23,6 +24,7 @@ const { lang } = Astro.props;
   <Hero lang={lang} />
   <main>
     <Apps lang={lang} />
+    <Webs lang={lang} />
     <Ticker lang={lang} />
     <Now lang={lang} />
     <Timeline lang={lang} />
