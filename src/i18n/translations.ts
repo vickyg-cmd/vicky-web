@@ -34,6 +34,7 @@ export interface Translations {
   hero_parts: { text: string; tone?: "a" | "b" | "c"; br?: boolean }[];
   /** The same headline as plain text, for share cards. */
   hero_title: string;
+  hero_sub: string;
   hero_lede: string;
   hero_me: string;
   hero_cta: string;
@@ -140,7 +141,7 @@ export const translations: Record<Lang, Translations> = {
     ],
     speed_label: "Velocidad de las animaciones",
 
-    intro_lines: ["¡Hola!", "Hi!", "Soy Victoria.", "Hablo rápido.", "Programo igual.", "Desarrollo apps", "para iPhone", "y Android.", "Dos ya están", "publicadas.", "¿Te las enseño?"],
+    intro_lines: ["¡Hola!", "Hi!", "Soy Victoria.", "Hablo rápido.", "Programo igual.", "de ideas a productos.", "¿Te las enseño?"],
     intro_skip: "Saltar",
     hero_parts: [
       { text: "¡Hola!", tone: "a", br: true },
@@ -150,8 +151,9 @@ export const translations: Record<Lang, Translations> = {
       { text: "creo apps.", tone: "c" },
     ],
     hero_title: "¡Hola! Soy Victoria, hablo rápido y creo apps.",
-    hero_lede: "Desarrolladora iOS y Android en Barcelona. TermoTrendy y PassCat ya están publicadas.",
-    hero_me: "Arquitecta de software junior en NTT DATA. Tech lead en two.zero.",
+    hero_sub: "y webs. y SaaS.",
+    hero_lede: "Desarrolladora iOS y Android en Barcelona.",
+    hero_me: "Arquitecta de software junior en NTT DATA.",
     hero_cta: "Ver mis apps",
     hero_again: "Otra vez",
 
@@ -274,7 +276,7 @@ export const translations: Record<Lang, Translations> = {
     ],
     speed_label: "Animation speed",
 
-    intro_lines: ["Hi!", "¡Hola!", "I'm Victoria.", "I talk fast.", "I code the same way.", "I develop apps", "for iPhone", "and Android.", "Two are", "already out.", "Want to see them?"],
+    intro_lines: ["Hi!", "¡Hola!", "I'm Victoria.", "I talk fast.", "I code the same way.", "from ideas to products.", "Want to see them?"],
     intro_skip: "Skip",
     hero_parts: [
       { text: "Hi!", tone: "a", br: true },
@@ -284,8 +286,9 @@ export const translations: Record<Lang, Translations> = {
       { text: "build apps.", tone: "c" },
     ],
     hero_title: "Hi! I'm Victoria, I talk fast and build apps.",
-    hero_lede: "iOS and Android developer in Barcelona. TermoTrendy and PassCat are already out.",
-    hero_me: "Junior software architect at NTT DATA. Tech lead at two.zero.",
+    hero_sub: "and webs. and SaaS.",
+    hero_lede: "iOS and Android developer in Barcelona.",
+    hero_me: "Junior software architect at NTT DATA.",
     hero_cta: "See my apps",
     hero_again: "Say it again",
 
@@ -408,7 +411,7 @@ export const translations: Record<Lang, Translations> = {
     ],
     speed_label: "Velocitat de les animacions",
 
-    intro_lines: ["Hola!", "Hi!", "Soc la Victoria.", "Parlo ràpid.", "Programo igual.", "Desenvolupo apps", "per a iPhone", "i Android.", "Dues ja estan", "publicades.", "Te les ensenyo?"],
+    intro_lines: ["Hola!", "Hi!", "Soc la Victoria.", "Parlo ràpid.", "Programo igual.", "d'idees a productes.", "Te les ensenyo?"],
     intro_skip: "Omet",
     hero_parts: [
       { text: "Hola!", tone: "a", br: true },
@@ -418,8 +421,9 @@ export const translations: Record<Lang, Translations> = {
       { text: "creo apps.", tone: "c" },
     ],
     hero_title: "Hola! Soc la Victoria, parlo ràpid i creo apps.",
-    hero_lede: "Desenvolupadora iOS i Android a Barcelona. TermoTrendy i PassCat ja estan publicades.",
-    hero_me: "Arquitecta de programari júnior a NTT DATA. Tech lead a two.zero.",
+    hero_sub: "i webs. i SaaS.",
+    hero_lede: "Desenvolupadora iOS i Android a Barcelona.",
+    hero_me: "Arquitecta de programari júnior a NTT DATA.",
     hero_cta: "Mira les meves apps",
     hero_again: "Un altre cop",
 

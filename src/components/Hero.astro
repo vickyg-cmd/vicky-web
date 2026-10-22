@@ -32,6 +32,7 @@ const t = translations[lang];
     <h1 tabindex="-1">
       {t.hero_parts.map((p) => <><span class:list={["part", p.tone && `part--${p.tone}`]}>{p.text}</span>{p.br && <br class="phone-br" />}{" "}</>)}
     </h1>
+    <p class="settled__sub">{t.hero_sub}</p>
     <p class="settled__lede">{t.hero_lede}</p>
     <div class="settled__acts">
       <a class="btn" href="#apps">{t.hero_cta}</a>
@@ -174,6 +175,12 @@ const t = translations[lang];
     background: var(--red);
     font-stretch: 75%;
     rotate: 1.5deg;
+  }
+  .settled__sub {
+    font-weight: 800;
+    font-size: clamp(1.1rem, 3.5vw, 2rem);
+    letter-spacing: -0.02em;
+    margin: 0.4em 0 0;
   }
   .settled__lede {
     max-width: 38ch;
